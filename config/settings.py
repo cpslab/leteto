@@ -39,11 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'handsons.apps.HandsonsConfig',
+    'users.apps.UsersConfig',
     
     'rest_framework',
-    'corsheaders',
+
     'rest_framework.authtoken',
     'dj_rest_auth',
+
+    'corsheaders',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +138,16 @@ STATIC_URL = '/static/'
 
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/',
-    'localhost:3000',
+    'http://localhost:3000',
 )
+
+AUTH_USER_MODEL = 'users.CustomUser'
+SITE_ID = 1
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+
+REST_USE_JWT = True
