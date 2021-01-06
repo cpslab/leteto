@@ -10,6 +10,8 @@ django = "*"
 djangorestframework = "*"
 dj-rest-auth = "*"
 django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.8"
