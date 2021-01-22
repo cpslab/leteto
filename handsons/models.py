@@ -35,7 +35,7 @@ class Handson(models.Model):
     status = models.CharField(max_length=50, choices=[("f", "future"), ("o", "open"), ("c", "closed"), ("p", "past")])
 
     def __str__(self):
-        pass
+        return 'owner: ' + self.owner.username + ', title: ' + self.title
 
     class Meta:
         db_table = ''
@@ -55,7 +55,7 @@ class HandsonContent(models.Model):
     updated_at = models.DateTimeField('更新日時', auto_now=True)
 
     def __str__(self):
-        pass
+        return 'title: ' + self.handson.title + ', content: ' + self.content
 
     class Meta:
         db_table = ''
@@ -71,7 +71,7 @@ class ContentPassMember(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        pass
+        return 'title: ' + self.content.handson.title + ', content: ' + self.content.content + ', user: ' + self.user.username
 
     class Meta:
         db_table = ''
@@ -87,7 +87,7 @@ class HandsonMember(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        pass
+        return 'title: ' + self.handson.title + ', user: ' + self.user.username
 
     class Meta:
         db_table = ''
