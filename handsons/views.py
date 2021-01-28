@@ -5,6 +5,6 @@ from .models import Handson
 from .serializers import HandsonSerializer
 
 # Create your views here.
-class HandsonList(generics.ListCreateAPIView):
+class HandsonList(generics.ListAPIView):
     queryset = Handson.objects.all()
     serializer_class = HandsonSerializer
