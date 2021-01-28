@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Handson
 
 # mserializer
-class HandsonSerializer(serializers.ModelSerializer):
+class HandsonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Handson
