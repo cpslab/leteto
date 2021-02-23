@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from .models import Handson
-from .serializers import HandsonListSerializer,HandsonDetailSerializer
+from .serializers import HandsonListSerializer, HandsonDetailSerializer
 
 # Create your views here.
 
