@@ -7,11 +7,41 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id', 'username')
 
-# Handson list
-class HandsonListSerializer(serializers.ModelSerializer):
+# Handson list & create
+class HandsonListCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Handson
-        fields = ('id', 'owner', 'title', 'start_at', 'is_public', 'status')
+        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'status')
+        extra_kwargs = {
+            'headline' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'detail' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'require' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'document_url' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'meeting_url' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'movie_url' : {
+                'write_only' : True,
+                'allow_blank' : True,
+            },
+            'end_at' : {
+                'write_only' : True,
+                'allow_null' : True,
+            },
+        }
 
 # Handson detail
 class HandsonDetailSerializer(serializers.ModelSerializer):
