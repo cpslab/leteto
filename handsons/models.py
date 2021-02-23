@@ -24,7 +24,7 @@ class Handson(models.Model):
 
     start_at = models.DateTimeField()
 
-    end_at = models.DateTimeField()
+    end_at = models.DateTimeField(null=True)
 
     created_at = models.DateTimeField('作成日時', auto_now_add=True)
     
