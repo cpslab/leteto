@@ -39,7 +39,6 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
             },
             'end_at' : {
                 'write_only' : True,
-                'allow_null' : True,
             },
         }
 
