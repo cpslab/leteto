@@ -2,14 +2,14 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from .models import Handson
-from .serializers import HandsonListSerializer, HandsonDetailSerializer
+from .serializers import HandsonListCreateSerializer, HandsonDetailSerializer
 
 # Create your views here.
 
-# Handson list
-class HandsonList(generics.ListAPIView):
+# Handson list & create
+class HandsonListCreateAPIView(generics.ListCreateAPIView):
     queryset = Handson.objects.all()
-    serializer_class = HandsonListSerializer
+    serializer_class = HandsonListCreateSerializer
 
 # Handson detail
 class HandsonDetail(generics.RetrieveAPIView):
