@@ -55,8 +55,8 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
         handson = Handson.objects.create(owner=owner, **validated_data)
         return handson
 
-# Handson detail
-class HandsonDetailSerializer(serializers.ModelSerializer):
+# Handson detail & update & delete
+class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     class Meta:
         model = Handson

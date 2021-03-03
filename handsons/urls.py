@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import HandsonListCreateAPIView, HandsonDetail
+from .views import HandsonListCreateAPIView, HandsonRetrieveUpdateAPIView
 
 urlpatterns = [
     path('', HandsonListCreateAPIView.as_view()),
-    path('<int:id>', HandsonDetail.as_view()),
+    path('<int:id>', HandsonRetrieveUpdateAPIView.as_view()),
 ]
