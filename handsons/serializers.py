@@ -16,7 +16,7 @@ class HandsonMemberSerializer(serializers.ModelSerializer):
         fields = ['user', 'handson']
         validators = [
             UniqueTogetherValidator(
-            queryset= HandsonMember.objects.all(),
-            fields=['user', 'handson']
+                queryset= HandsonMember.objects.all(),
+                fields=['user', 'handson']
             )
         ]
