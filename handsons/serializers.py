@@ -51,9 +51,6 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
                 'write_only': True,
                 'allow_blank': True,
             },
-            'end_at': {
-                'write_only': True,
-            },
         }
 
     def create(self, validated_data):
