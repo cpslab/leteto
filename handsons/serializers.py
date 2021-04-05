@@ -51,9 +51,6 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
                 'write_only': True,
                 'allow_blank': True,
             },
-            'end_at': {
-                'write_only': True,
-            },
         }
 
     def create(self, validated_data):
@@ -68,11 +65,43 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
 
 class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     owner = UserSerializer()
-
     class Meta:
         model = Handson
-        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require',
-                  'document_url', 'meeting_url', 'movie_url', 'start_at', 'is_public', 'status')
+        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'status')
+        extra_kwargs = {
+            'headline' : {
+                'allow_blank' : True,
+            },
+            'detail' : {
+                'allow_blank' : True,
+            },
+            'require' : {
+                'allow_blank' : True,
+            },
+            'document_url' : {
+                'allow_blank' : True,
+            },
+            'meeting_url' : {
+                'allow_blank' : True,
+            },
+            'movie_url' : {
+                'allow_blank' : True,
+            },
+        }
+    def update(self, instance, validated_data):
+        instance.title = validated_data['title']
+        instance.headline = validated_data['headline']
+        instance.detail = validated_data['detail']
+        instance.require = validated_data['require']
+        instance.document_url = validated_data['document_url']
+        instance.meeting_url = validated_data['meeting_url']
+        instance.movie_url = validated_data['movie_url']
+        instance.start_at = validated_data['start_at']
+        instance.end_at = validated_data['end_at']
+        instance.is_public = validated_data['is_public']
+        instance.status = validated_data['status']
+        instance.save()
+        return instance
 
 
 class HandsonMemberSerializer(serializers.ModelSerializer):
