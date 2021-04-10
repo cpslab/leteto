@@ -27,7 +27,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public --no-dll",
-    "build-storybook": "build-storybook -s public --no-dll"
+    "build-storybook": "build-storybook -s public --no-dll",
+    "page:codegen": "node ./scripts/page-codegen.mjs",
+    "layout:codegen": "node ./scripts/layout-codegen.mjs",
+    "comp:codegen": "node ./scripts/comp-codegen.mjs"
   },
   "eslintConfig": {
     "extends": [
