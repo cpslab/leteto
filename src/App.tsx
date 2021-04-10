@@ -2,10 +2,14 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
+import createTheam from './thema';
 
-function App() {
+const theme = createTheam();
+
+function App(): JSX.Element {
   return (
-    <div className="App">
+    <ThemeProvider theme={theme}>
       <Router>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
@@ -22,7 +26,7 @@ function App() {
           </a>
         </header>
       </Router>
-    </div>
+    </ThemeProvider>
   );
 }
 
