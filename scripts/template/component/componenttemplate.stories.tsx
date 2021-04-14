@@ -5,7 +5,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 import { COMPONENTTEMPLATE } from '.';
 
 export default {
-  title: 'page/COMPONENTTEMPLATE',
+  title: 'component/COMPONENTTEMPLATE',
   component: COMPONENTTEMPLATE,
   argTypes: {
     backgroundColor: { control: 'color' },
