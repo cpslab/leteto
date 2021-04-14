@@ -108,7 +108,7 @@ class HandsonMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HandsonMember
-        fields = ['user', 'handson']
+        fields = ['user', 'handson', 'id']
         validators = [
             UniqueTogetherValidator(
                 queryset=HandsonMember.objects.all(),
