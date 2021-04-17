@@ -1,12 +1,16 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import * as serviceTypes from './service-types';
 
 // create http instance
 const service_url = process.env.SERVICE_URL;
+const csrfToken = Cookies.get('csrftoken');
 const http = axios.create({
   baseURL: service_url,
-  headers: { 'Content-Type': 'application/json' },
-  xsrfCookieName: 'csrftoken',
+  headers: {
+    'content-type': 'application/json;charset=utf-8',
+    'x-csrftoken': csrfToken,
+  },
 });
 
 // Authorization Service
