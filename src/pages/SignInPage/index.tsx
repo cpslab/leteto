@@ -14,6 +14,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Lock as LockOutlinedIcon } from '@material-ui/icons';
+import { useAuth } from '../../auth/AuthProvider';
+import { useHistory } from 'react-router-dom';
 
 const Paper = styled.div`
   margin-top: ${(props) => props.theme.spacing(8)}px;
@@ -50,6 +52,23 @@ const Copyright = () => {
 };
 
 export const SignInPage: React.FC = () => {
+  const auth = useAuth();
+  const history = useHistory();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const username = event.currentTarget.elements.namedItem(
+      'username'
+    ) as HTMLInputElement;
+    const email = event.currentTarget.elements.namedItem(
+      'email'
+    ) as HTMLInputElement;
+    const password = event.currentTarget.elements.namedItem(
+      'password'
+    ) as HTMLInputElement;
+    await auth.signin(username.value, email.value, password.value, history);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -60,7 +79,18 @@ export const SignInPage: React.FC = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Form noValidate>
+        <Form onSubmit={handleSubmit} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+          />
           <TextField
             variant="outlined"
             margin="normal"
