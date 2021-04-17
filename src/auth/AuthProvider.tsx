@@ -42,9 +42,13 @@ const useAuthContext = (): authContextType => {
     password: string,
     history: H.History
   ) => {
-    const user = await API.signin({ username, email, password });
-    setCurrentUser(user);
-    history.push('/handsons');
+    try {
+      const user = await API.signin({ username, email, password });
+      setCurrentUser(user);
+      history.push('/handsons');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signup = async (
@@ -54,9 +58,13 @@ const useAuthContext = (): authContextType => {
     repassword: string,
     history: H.History
   ) => {
-    const user = await API.signup({ username, email, password, repassword });
-    setCurrentUser(user);
-    history.push('/handsons');
+    try {
+      const user = await API.signup({ username, email, password, repassword });
+      setCurrentUser(user);
+      history.push('/handsons');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signout = async (history: H.History) => {
@@ -68,8 +76,12 @@ const useAuthContext = (): authContextType => {
 
   useEffect(() => {
     (async function () {
-      const user = await API.getCurrentUser();
-      setCurrentUser(user);
+      try {
+        const user = await API.getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
 
