@@ -4,8 +4,10 @@ import {
   Avatar as MuiAvatar,
   Box,
   Button,
+  Checkbox,
   Container,
   CssBaseline,
+  FormControlLabel,
   Grid,
   Link,
   TextField,
@@ -49,7 +51,7 @@ const Copyright = () => {
   );
 };
 
-export const SignInPage: React.FC = () => {
+export const SignUpPage: React.FC = () => {
   const auth = useAuth();
   const history = useHistory();
 
@@ -61,10 +63,19 @@ export const SignInPage: React.FC = () => {
     const email = event.currentTarget.elements.namedItem(
       'email'
     ) as HTMLInputElement;
-    const password = event.currentTarget.elements.namedItem(
-      'password'
+    const password1 = event.currentTarget.elements.namedItem(
+      'password1'
     ) as HTMLInputElement;
-    await auth.signin(username.value, email.value, password.value, history);
+    const password2 = event.currentTarget.elements.namedItem(
+      'password2'
+    ) as HTMLInputElement;
+    await auth.signup(
+      username.value,
+      email.value,
+      password1.value,
+      password2.value,
+      history
+    );
   };
 
   return (
@@ -75,7 +86,7 @@ export const SignInPage: React.FC = () => {
           <LockOutlinedIcon />
         </LockAvator>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign Up
         </Typography>
         <Form onSubmit={handleSubmit} noValidate>
           <TextField
@@ -104,10 +115,21 @@ export const SignInPage: React.FC = () => {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="password1"
             label="Password"
             type="password"
-            id="password"
+            id="password1"
+            autoComplete="current-password"
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password2"
+            label="Password Again"
+            type="password"
+            id="password2"
             autoComplete="current-password"
           />
           <SubmitButton
@@ -116,12 +138,12 @@ export const SignInPage: React.FC = () => {
             variant="contained"
             color="primary"
           >
-            Sign In
+            Sign Up
           </SubmitButton>
           <Grid container justify="center">
             <Grid item>
               <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {'If you have an account. Sign In'}
               </Link>
             </Grid>
           </Grid>
