@@ -21,16 +21,17 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
         by filtering against a `owner` query parameter in the URL.
         """
         queryset = Handson.objects.all()
-        owner_name = self.request.query_params.get('owner')
-        if owner_name is not None:
-            if owner_name == 'me':
+        owner_id = self.request.query_params.get('owner')
+        if owner_id is not None:
+            if owner_id == 'me':
                 current_user = self.request.user
                 queryset = queryset.filter(owner=current_user) 
             else:
                 try:
-                    owner_name = CustomUser.objects.get(username=owner_name)
-                    queryset = queryset.filter(owner=owner_name)
+                    CustomUser.objects.get(id=owner_id)
+                    queryset = queryset.filter(owner=owner_id)
                 except: 
+                    # CustomUser matching query does not exist
                     raise exceptions.ParseError('Invalid Request')
         return queryset
 
