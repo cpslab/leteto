@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import {
-  Avatar as MuiAvatar,
   Box,
   Button,
   Container,
@@ -11,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { Lock as LockOutlinedIcon } from '@material-ui/icons';
 import { useAuth } from '../../auth/AuthProvider';
 import { useHistory } from 'react-router-dom';
 
@@ -20,11 +18,6 @@ const Paper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const LockAvator = styled(MuiAvatar)`
-  margin: ${(props) => props.theme.spacing(1)}px;
-  background-color: ${(props) => props.theme.palette.secondary.main};
 `;
 
 const Form = styled.form`
@@ -40,10 +33,7 @@ const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Leteto
-      </Link>{' '}
-      {new Date().getFullYear()}
+      <Link color="inherit">Leteto</Link> {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
@@ -71,9 +61,13 @@ export const SignInPage: React.FC = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Paper>
-        <LockAvator>
-          <LockOutlinedIcon />
-        </LockAvator>
+        <img
+          src="/static/Leteto.svg"
+          alt="leteto"
+          title="leteto レテト"
+          width="50%"
+          height="100%"
+        ></img>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
