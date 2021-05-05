@@ -179,3 +179,9 @@ JWT_AUTH_SECURE = True
 
 # 登録時のメールをコンソールに出力する
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# 東京のタイムゾーンに設定
+TIME_ZONE = 'Asia/Tokyo'
+
+# タイムゾーンを使用するかどうか
+USE_TZ = True
