@@ -22,7 +22,7 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
         Optionally restricts the returned handsons to a given user,
         by filtering against a `owner` query parameter in the URL.
         """
-        queryset = Handson.objects.order_by('start_at')
+        queryset = Handson.objects.order_by('-start_at')
         owner_id = self.request.query_params.get('owner')
         if owner_id is not None:
             if owner_id == 'me':
