@@ -32,8 +32,6 @@ class Handson(models.Model):
 
     is_public = models.BooleanField(default=True)
 
-    status = models.CharField(max_length=50, choices=[("f", "future"), ("o", "open"), ("c", "closed"), ("p", "past")])
-
     def __str__(self):
         return 'owner: ' + self.owner.username + ', title: ' + self.title
 
