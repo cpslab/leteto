@@ -25,7 +25,7 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Handson
         fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url',
-                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'status')
+                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public')
         extra_kwargs = {
             'headline': {
                 'write_only': True,
@@ -59,6 +59,14 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
         owner = CustomUser.objects.get_or_create(username=username)[0]
         handson = Handson.objects.create(owner=owner, **validated_data)
         return handson
+    
+    def validate(self, data):
+        """
+        Check that start_at is before end_at.
+        """
+        if data['start_at'] >= data['end_at']:
+            raise serializers.ValidationError("end_at must occur after start_at")
+        return data
 
 # Handson detail & update & delete
 
@@ -67,7 +75,7 @@ class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     class Meta:
         model = Handson
-        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'status')
+        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public')
         extra_kwargs = {
             'headline' : {
                 'allow_blank' : True,
@@ -99,7 +107,6 @@ class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         instance.start_at = validated_data['start_at']
         instance.end_at = validated_data['end_at']
         instance.is_public = validated_data['is_public']
-        instance.status = validated_data['status']
         instance.save()
         return instance
 
