@@ -7,6 +7,7 @@ from .serializers import HandsonListCreateSerializer, HandsonRetrieveUpdateDestr
 from .permissions import IsAuthorOrReadOnly
 import django_filters.rest_framework as filters
 from rest_framework import exceptions
+from rest_framework.response import Response
 from django.utils import timezone
 from django.utils.timezone import localtime
 
@@ -71,3 +72,14 @@ class HandsonMemberRetrieveDestroyView(generics.RetrieveDestroyAPIView):
     queryset = HandsonMember.objects.all()
     serializer_class = HandsonMemberSerializer
     permission_classes = [IsAuthorOrReadOnly]
+
+
+class NestedHandsonMember(generics.ListAPIView):
+    queryset = HandsonMember.objects.all()
+    serializer_class = HandsonMemberSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        queryset = HandsonMember.objects.filter(handson=self.kwargs.get('pk'))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
