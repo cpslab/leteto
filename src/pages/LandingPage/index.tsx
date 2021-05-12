@@ -21,7 +21,7 @@ const BackgroundGrid = styled(MuiGrid)`
 export const LandingPage: React.FC = () => {
   return (
     <Grid>
-      <AppBar position="static" color="inherit">
+      <AppBar position="static" color="primary">
         <Toolbar>
           <LeftGrid>
             <img
