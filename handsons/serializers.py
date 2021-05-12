@@ -106,6 +106,8 @@ class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
 
 class HandsonMemberSerializer(serializers.ModelSerializer):
 
+    user = UserSerializer()
+
     class Meta:
         model = HandsonMember
         fields = ['user', 'handson', 'id']
