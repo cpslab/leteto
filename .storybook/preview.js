@@ -13,6 +13,7 @@ const theme = createTheme();
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
+  layout: 'fullscreen',
 };
 
 const withThemeProvider = (Story, context) => {
