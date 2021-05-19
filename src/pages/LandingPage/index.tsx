@@ -1,45 +1,30 @@
 import React from 'react';
-import {
-  AppBar,
-  Button,
-  Grid,
-  Grid as MuiGrid,
-  Toolbar,
-} from '@material-ui/core';
-import styled from 'styled-components/macro';
-
-const LeftGrid = styled(MuiGrid)`
-  flex-grow: 1;
-`;
-
-const BackgroundGrid = styled(MuiGrid)`
-  background-color: ${(props) => props.theme.palette.secondary.main};
-  width: 100%;
-  height: 100vh;
-`;
+import { Button, Grid } from '@material-ui/core';
+import { AppBase } from '../../components/common/AppBase';
+import { CustomAppBar } from '../../components/common/CustomAppBar';
 
 export const LandingPage: React.FC = () => {
   return (
     <Grid>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <LeftGrid>
-            <img
-              src="/static/Leteto.svg"
-              alt="Leteto"
-              title="Leteto レテト"
-              width="94px"
-              height="100%"
-            ></img>
-          </LeftGrid>
-          <Grid container justify="flex-end">
+      <CustomAppBar
+        left={
+          <img
+            src="/static/Leteto.svg"
+            alt="Leteto"
+            title="Leteto レテト"
+            width="94px"
+            height="100%"
+          ></img>
+        }
+        right={
+          <>
             <Button color="inherit">サインイン</Button>
             <Button color="inherit">サインアップ</Button>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+          </>
+        }
+      ></CustomAppBar>
 
-      <BackgroundGrid></BackgroundGrid>
+      <AppBase></AppBase>
     </Grid>
   );
 };
