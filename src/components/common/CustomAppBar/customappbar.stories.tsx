@@ -6,7 +6,7 @@ import { CustomAppBar } from '.';
 import { Button } from '@material-ui/core';
 
 export default {
-  title: 'component/CustomAppBar',
+  title: 'component/common/CustomAppBar',
   component: CustomAppBar,
   argTypes: {
     backgroundColor: { control: 'color' },

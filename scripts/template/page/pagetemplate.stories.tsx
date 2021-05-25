@@ -5,7 +5,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 import { PAGETEMPLATE } from '.';
 
 export default {
-  title: 'page/PAGETEMPLATE',
+  title: 'page/PAGEFILEPATH',
   component: PAGETEMPLATE,
   argTypes: {
     backgroundColor: { control: 'color' },

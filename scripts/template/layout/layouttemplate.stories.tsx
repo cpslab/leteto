@@ -5,7 +5,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 import { LAYOUTTEMPLATE } from '.';
 
 export default {
-  title: 'layout/LAYOUTTEMPLATE',
+  title: 'layout/LAYOUTFILEPATH',
   component: LAYOUTTEMPLATE,
   argTypes: {
     backgroundColor: { control: 'color' },
