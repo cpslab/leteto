@@ -21,13 +21,11 @@ const withThemeProvider = (Story, context) => {
     <StylesProvider injectFirst>
       <MaterialThemeProvider theme={theme}>
         <StyledThemeProvider theme={theme}>
-          <AuthProvider>
-            <Router>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <Story {...context} />
-            </Router>
-          </AuthProvider>
+          <Router>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Story {...context} />
+          </Router>
         </StyledThemeProvider>
       </MaterialThemeProvider>
     </StylesProvider>

@@ -13,6 +13,10 @@ import {
 import { useAuth } from '../../auth/AuthProvider';
 import { useHistory } from 'react-router-dom';
 
+export type SignInPageComponentProps = {
+  handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
 const Paper = styled.div`
   margin-top: ${(props) => props.theme.spacing(8)}px;
   display: flex;
@@ -39,24 +43,9 @@ const Copyright = () => {
   );
 };
 
-export const SignInPage: React.FC = () => {
-  const auth = useAuth();
-  const history = useHistory();
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const username = event.currentTarget.elements.namedItem(
-      'username'
-    ) as HTMLInputElement;
-    const email = event.currentTarget.elements.namedItem(
-      'email'
-    ) as HTMLInputElement;
-    const password = event.currentTarget.elements.namedItem(
-      'password'
-    ) as HTMLInputElement;
-    await auth.signin(username.value, email.value, password.value, history);
-  };
-
+export const SignInPageComponent: React.FC<SignInPageComponentProps> = (
+  props
+) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -71,7 +60,7 @@ export const SignInPage: React.FC = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Form onSubmit={handleSubmit} noValidate>
+        <Form onSubmit={props.handleSubmit} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -125,5 +114,30 @@ export const SignInPage: React.FC = () => {
         <Copyright />
       </Box>
     </Container>
+  );
+};
+
+export const SignInPage: React.FC = () => {
+  const auth = useAuth();
+  const history = useHistory();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const username = event.currentTarget.elements.namedItem(
+      'username'
+    ) as HTMLInputElement;
+    const email = event.currentTarget.elements.namedItem(
+      'email'
+    ) as HTMLInputElement;
+    const password = event.currentTarget.elements.namedItem(
+      'password'
+    ) as HTMLInputElement;
+    await auth.signin(username.value, email.value, password.value, history);
+  };
+
+  return (
+    <SignInPageComponent
+      handleSubmit={(e) => handleSubmit(e)}
+    ></SignInPageComponent>
   );
 };
