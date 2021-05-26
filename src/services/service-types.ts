@@ -7,6 +7,41 @@ export type User = {
   last_name?: string;
 };
 
+export type Owner = {
+  id: number;
+  username: string;
+};
+
+export type HandsonListItem = {
+  id: number;
+  owner: Owner;
+  title: string;
+  start_at: string;
+  end_at: string;
+  is_public: boolean;
+};
+
+export type HandsonDetailItem = {
+  id: number;
+  owner: Owner;
+  title: string;
+  headline: string;
+  detail: string;
+  require: string;
+  document_url: string;
+  meeting_url: string;
+  movie_url: string;
+  start_at: string;
+  end_at: string;
+  is_public: boolean;
+};
+
+export type HandsonContent = {
+  id: number;
+  handsonId: number;
+  content: string;
+};
+
 // Authorization
 export type SignInRequest = {
   username: string;
@@ -35,4 +70,23 @@ export type SignUpResponse = {
 
 export type GetCurrentUserResponse = {
   user: User;
+};
+
+// Handson
+export type CreateHandsonRequest = {
+  owner: Omit<Owner, 'id'>;
+  title: string;
+  headline: string;
+  detail: string;
+  require: string;
+  document_url: string;
+  meeting_url: string;
+  movie_url: string;
+  start_at: string;
+  end_at: string;
+  is_public: boolean;
+};
+
+export type CreateHandsonResponse = {
+  handson: HandsonListItem;
 };

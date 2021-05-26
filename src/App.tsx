@@ -11,10 +11,10 @@ import createTheme from './theme';
 import { AuthProvider } from './auth/AuthProvider';
 import { AuthenticatedRoute } from './auth/AuthenticatedRoute';
 import { PrivateRoute } from './auth/PrivateRoute';
-import { HandsonListPage } from './pages/handson/HandsonListPage';
 import { SignInPage } from './pages/SignInPage';
 import { SignUpPage } from './pages/SignUpPage';
 import { HandsonListPage } from './pages/handson/HandsonListPage';
+import { HandsonCreatePage } from './pages/handson/HandsonCreatePage';
 
 const theme = createTheme();
 
@@ -33,6 +33,11 @@ function App(): JSX.Element {
                 exact
                 path="/handsons"
                 component={HandsonListPage}
+              ></PrivateRoute>
+              <PrivateRoute
+                exact
+                path="/handsons/create"
+                component={HandsonCreatePage}
               ></PrivateRoute>
             </Router>
           </AuthProvider>

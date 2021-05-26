@@ -92,3 +92,22 @@ export const getCurrentUser = async (): Promise<serviceTypes.User> => {
   }
   throw new Error('No User');
 };
+
+// Handson Service
+/**
+ * Create handson
+ * api/v1/handsons
+ */
+export const createHandson = async (
+  request: serviceTypes.CreateHandsonRequest
+): Promise<serviceTypes.HandsonListItem> => {
+  const result = await http.post<serviceTypes.CreateHandsonResponse>(
+    'api/v1/handsons/',
+    request
+  );
+  if ('data' in result && result.data) {
+    const data = result.data as serviceTypes.CreateHandsonResponse;
+    return data.handson;
+  }
+  throw new Error('Invalid');
+};
