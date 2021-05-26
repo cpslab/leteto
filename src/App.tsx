@@ -13,6 +13,8 @@ import { AuthenticatedRoute } from './auth/AuthenticatedRoute';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { HandsonListPage } from './pages/handson/HandsonListPage';
 import { SignInPage } from './pages/SignInPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { HandsonListPage } from './pages/handson/HandsonListPage';
 
 const theme = createTheme();
 
@@ -26,6 +28,7 @@ function App(): JSX.Element {
             <Router>
               <AuthenticatedRoute exact path="/"></AuthenticatedRoute>
               <Route exact path="/signin" component={SignInPage}></Route>
+              <Route exact path="/signup" component={SignUpPage}></Route>
               <PrivateRoute
                 exact
                 path="/handsons"
