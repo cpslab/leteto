@@ -2,7 +2,7 @@ import React from 'react';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { ErrorMessage } from '.';
+import { ErrorMessage, ErrorMessageProps } from '.';
 
 export default {
   title: 'component/common/ErrorMessage',
@@ -12,7 +12,9 @@ export default {
   },
 } as Meta;
 
-const Template: Story = (args) => <ErrorMessage {...args} />;
+const Template: Story<ErrorMessageProps> = (args) => <ErrorMessage {...args} />;
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  message: 'defaultは必須です',
+};
