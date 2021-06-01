@@ -15,6 +15,7 @@ import { SignInPage } from './pages/SignInPage';
 import { SignUpPage } from './pages/SignUpPage';
 import { HandsonListPage } from './pages/handson/HandsonListPage';
 import { HandsonCreatePage } from './pages/handson/HandsonCreatePage';
+import { HandsonEditPage } from './pages/handson/HandsonEditPage';
 
 const theme = createTheme();
 
@@ -38,6 +39,11 @@ function App(): JSX.Element {
                 exact
                 path="/handsons/create"
                 component={HandsonCreatePage}
+              ></PrivateRoute>
+              <PrivateRoute
+                exact
+                path="/handsons/:id/edit"
+                component={HandsonEditPage}
               ></PrivateRoute>
             </Router>
           </AuthProvider>
