@@ -90,3 +90,30 @@ export type CreateHandsonRequest = {
 export type CreateHandsonResponse = {
   handson: HandsonListItem;
 };
+
+export type GetHandsonRequest = {
+  id: number;
+};
+
+export type GetHandsonResponse = {
+  handson: HandsonDetailItem;
+};
+
+export type UpdateHandsonRequest = {
+  id: number;
+  owner: Owner;
+  title: string;
+  headline: string;
+  detail: string;
+  require: string;
+  document_url: string;
+  meeting_url: string;
+  movie_url: string;
+  start_at: string;
+  end_at: string;
+  is_public: boolean;
+};
+
+export type UpdateHandsonResponse = {
+  handson: HandsonDetailItem;
+};

@@ -111,3 +111,38 @@ export const createHandson = async (
   }
   throw new Error('Invalid');
 };
+
+/**
+ * Get handson Detail
+ * api/v1/handsons/:id
+ */
+export const getHandson = async (
+  request: serviceTypes.GetHandsonRequest
+): Promise<serviceTypes.HandsonDetailItem> => {
+  const result = await http.get<serviceTypes.GetHandsonResponse>(
+    'api/v1/handsons/' + request.id
+  );
+  if ('data' in result && result.data) {
+    const data = result.data as serviceTypes.GetHandsonResponse;
+    return data.handson;
+  }
+  throw new Error('Invalid');
+};
+
+/**
+ * Update handson
+ * api/v1/handsons/:id
+ */
+export const updateHandson = async (
+  request: serviceTypes.UpdateHandsonRequest
+): Promise<serviceTypes.HandsonDetailItem> => {
+  const result = await http.post<serviceTypes.UpdateHandsonResponse>(
+    'api/v1/handsons/' + request.id,
+    request
+  );
+  if ('data' in result && result.data) {
+    const data = result.data as serviceTypes.UpdateHandsonResponse;
+    return data.handson;
+  }
+  throw new Error('Invalid');
+};
