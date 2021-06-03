@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, Grid } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { AppBase } from '../../components/common/AppBase';
-import { CustomAppBar } from '../../components/common/CustomAppBar';
+import { AppBar } from '../../components/common/AppBar';
+import { AppMain } from '../../components/common/AppMain';
 
 export const LandingPage: React.FC = () => {
   return (
-    <Grid>
-      <CustomAppBar
+    <AppBase>
+      <AppBar
         left={
           <img
             src="/static/Leteto.svg"
@@ -22,9 +23,9 @@ export const LandingPage: React.FC = () => {
             <Button color="inherit">サインアップ</Button>
           </>
         }
-      ></CustomAppBar>
+      ></AppBar>
 
-      <AppBase></AppBase>
-    </Grid>
+      <AppMain></AppMain>
+    </AppBase>
   );
 };

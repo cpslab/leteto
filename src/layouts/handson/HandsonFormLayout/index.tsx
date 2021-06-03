@@ -14,7 +14,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { AppBase } from '../../../components/common/AppBase';
-import { CustomAppBar } from '../../../components/common/CustomAppBar';
+import { AppBar } from '../../../components/common/AppBar';
+import { AppMain } from '../../../components/common/AppMain';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 
 export type HandsonFormLayoutProps = {
@@ -66,8 +67,8 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
   };
 
   return (
-    <Grid>
-      <CustomAppBar
+    <AppBase>
+      <AppBar
         left={
           <img
             src="/static/Leteto.svg"
@@ -82,9 +83,9 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
             <Button color="inherit">マイページ</Button>
           </>
         }
-      ></CustomAppBar>
+      ></AppBar>
 
-      <AppBase>
+      <AppMain>
         <ContentGrid>
           <Grid container spacing={2}>
             <Grid container item>
@@ -313,7 +314,7 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
             </GrowGrid>
           </Grid>
         </ContentGrid>
-      </AppBase>
-    </Grid>
+      </AppMain>
+    </AppBase>
   );
 };
