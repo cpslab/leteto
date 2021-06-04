@@ -16,6 +16,7 @@ import {
 import { AppBase } from '../../../components/common/AppBase';
 import { AppBar } from '../../../components/common/AppBar';
 import { AppMain } from '../../../components/common/AppMain';
+import { SpacingContainer } from '../../../components/common/SpacingContainer';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 
 export type HandsonFormLayoutProps = {
@@ -87,16 +88,21 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
 
       <AppMain>
         <ContentGrid>
-          <Grid container spacing={2}>
+          <SpacingContainer container spacing={2}>
             <Grid container item>
               <Typography variant="h5">{props.pageTitleText}</Typography>
             </Grid>
-            <GrowGrid item>
+            <SpacingContainer item flex={true}>
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <Grid container spacing={2}>
+                <SpacingContainer container spacing={2}>
                   <GrowGrid container item>
                     <FormPaper>
-                      <GrowGrid container direction="column" spacing={3}>
+                      <SpacingContainer
+                        container
+                        direction="column"
+                        spacing={3}
+                        flex={true}
+                      >
                         <Grid item>
                           <Typography variant="h6">タイトル</Typography>
                           <Controller
@@ -138,7 +144,7 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">開催日時</Typography>
-                          <Grid container spacing={2}>
+                          <SpacingContainer container spacing={2}>
                             <Grid item>
                               <Controller
                                 name="start_at"
@@ -180,7 +186,7 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                                 <ErrorMessage message="終了日時は必須項目です"></ErrorMessage>
                               )}
                             </Grid>
-                          </Grid>
+                          </SpacingContainer>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義詳細</Typography>
@@ -202,7 +208,11 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義情報</Typography>
-                          <Grid container direction="column" spacing={2}>
+                          <SpacingContainer
+                            container
+                            direction="column"
+                            spacing={2}
+                          >
                             <Grid item>
                               <Typography variant="caption">
                                 講義資料URL
@@ -263,7 +273,7 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                                 }}
                               ></Controller>
                             </Grid>
-                          </Grid>
+                          </SpacingContainer>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義内容</Typography>
@@ -301,7 +311,7 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                             }}
                           ></Controller>
                         </Grid>
-                      </GrowGrid>
+                      </SpacingContainer>
                     </FormPaper>
                   </GrowGrid>
                   <Grid container item justify="center">
@@ -309,10 +319,10 @@ export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
                       {props.submitButtonText}
                     </Button>
                   </Grid>
-                </Grid>
+                </SpacingContainer>
               </form>
-            </GrowGrid>
-          </Grid>
+            </SpacingContainer>
+          </SpacingContainer>
         </ContentGrid>
       </AppMain>
     </AppBase>
