@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 
 type AppMainProps = {
   bgColor?: PropTypes.Color;
+  children: React.ReactNode;
 };
 
 const Paper = styled(MuiPaper)(spacing);
@@ -28,6 +29,6 @@ const MainContent = styled(Paper)<Pick<AppMainProps, 'bgColor'>>`
   }};
 `;
 
-export const AppMain: React.FC<AppMainProps> = (props) => {
+export const AppMain = (props: AppMainProps): JSX.Element => {
   return <MainContent bgColor={props.bgColor}>{props.children}</MainContent>;
 };

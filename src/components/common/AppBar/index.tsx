@@ -20,7 +20,7 @@ const LeftGrid = styled(MuiGrid)`
   flex-grow: 1;
 `;
 
-export const AppBar: React.FC<AppBarProps> = ({ left, right, bgColor }) => {
+export const AppBar = ({ left, right, bgColor }: AppBarProps): JSX.Element => {
   return (
     <React.Fragment>
       <AppBarComponent position="static" color={bgColor}>

@@ -4,7 +4,7 @@ import { createHandson } from '../../../services';
 import { CreateHandsonRequest } from '../../../services/service-types';
 import { HandsonFormLayout } from '../../../layouts/handson/HandsonFormLayout';
 
-export const HandsonCreatePage: React.FC = () => {
+export const HandsonCreatePage = (): JSX.Element => {
   const auth = useAuth();
   const onAddHandson = async (
     data: Omit<CreateHandsonRequest, 'owner' | 'is_public'>

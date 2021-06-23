@@ -43,9 +43,9 @@ const Copyright = () => {
   );
 };
 
-export const SignUpPageComponent: React.FC<SignUpPageComponentProps> = (
-  props
-) => {
+export const SignUpPageComponent = (
+  props: SignUpPageComponentProps
+): JSX.Element => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -128,7 +128,7 @@ export const SignUpPageComponent: React.FC<SignUpPageComponentProps> = (
   );
 };
 
-export const SignUpPage: React.FC = () => {
+export const SignUpPage = (): JSX.Element => {
   const auth = useAuth();
   const history = useHistory();
 

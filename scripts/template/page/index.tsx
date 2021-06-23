@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const PAGETEMPLATE: React.FC = () => {
+export const PAGETEMPLATE = (): JSX.Element => {
   return <div></div>;
 };

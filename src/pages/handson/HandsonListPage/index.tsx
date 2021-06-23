@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import { useAuth } from '../../../auth/AuthProvider';
 import { useHistory } from 'react-router-dom';
 
-export const HandsonListPage: React.FC = () => {
+export const HandsonListPage = (): JSX.Element => {
   const auth = useAuth();
   const history = useHistory();
 

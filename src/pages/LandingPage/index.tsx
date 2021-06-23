@@ -4,7 +4,7 @@ import { AppBase } from '../../components/common/AppBase';
 import { AppBar } from '../../components/common/AppBar';
 import { AppMain } from '../../components/common/AppMain';
 
-export const LandingPage: React.FC = () => {
+export const LandingPage = (): JSX.Element => {
   return (
     <AppBase>
       <AppBar

@@ -9,7 +9,7 @@ import {
 } from '../../../services/service-types';
 import { HandsonFormLayout } from '../../../layouts/handson/HandsonFormLayout';
 
-export const HandsonEditPage: React.FC = () => {
+export const HandsonEditPage = (): JSX.Element => {
   const { id } = useParams<HandsonEditPageParams>();
   const auth = useAuth();
   const [handson, setHandson] = React.useState<HandsonDetailItem>();

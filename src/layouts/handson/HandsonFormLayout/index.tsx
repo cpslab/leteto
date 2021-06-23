@@ -54,7 +54,9 @@ const FormPaper = styled(MuiPaper)`
   flex-grow: 1;
 `;
 
-export const HandsonFormLayout: React.FC<HandsonFormLayoutProps> = (props) => {
+export const HandsonFormLayout = (
+  props: HandsonFormLayoutProps
+): JSX.Element => {
   const { handson, handleHandsonFormSubmit } = props;
   const {
     control,
