@@ -1,3 +1,13 @@
+import {
+  Button,
+  Grid,
+  Grid as MuiGrid,
+  IconButton,
+  Paper as MuiPaper,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
 import React from 'react';
 import styled from 'styled-components/macro';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
@@ -5,14 +15,6 @@ import {
   HandsonDetailItem,
   HandsonContent,
 } from '../../../services/service-types';
-import {
-  Button,
-  Grid,
-  Grid as MuiGrid,
-  Paper as MuiPaper,
-  TextField,
-  Typography,
-} from '@material-ui/core';
 import { AppBase } from '../../../components/common/AppBase';
 import { AppBar } from '../../../components/common/AppBar';
 import { AppMain } from '../../../components/common/AppMain';
@@ -73,13 +75,11 @@ export const HandsonFormLayout = (
     <AppBase>
       <AppBar
         left={
-          <img
-            src="/static/Leteto.svg"
-            alt="Leteto"
-            title="Leteto レテト"
-            width="94px"
-            height="100%"
-          ></img>
+          <>
+            <IconButton>
+              <ArrowBackIosIcon />
+            </IconButton>
+          </>
         }
         right={
           <>
