@@ -8,8 +8,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { AppBar, Tab, Tabs, Button, Box } from '@material-ui/core';
 import { HandsonListItem } from '../../../services/service-types';
-import { CustomAppBar } from '../../../components/common/CustomAppBar';
+import { AppBar as CustomAppBar } from '../../../components/common/AppBar';
 import { AppBase } from '../../../components/common/AppBase';
+import { parse } from 'date-fns';
 
 export type HandsonListLayoutProps = {
   handsons: HandsonListItem[];
@@ -53,17 +54,45 @@ const DateTypoGraphy = styled(Typography)`
   text-align: right;
 `;
 
-type HandsonCardProps = {
-  handson: HandsonListItem;
-};
-
 const HandsonTypeTabs = styled(Tabs)`
   background-color: white;
 `;
 
-// HandsonCardTemplete
+type HandsonCardProps = {
+  handson: HandsonListItem;
+};
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+type CenterdTabsProps = {
+  handsons: HandsonListItem[];
+  value: number;
+};
+
 const HandsonCardTemplete: React.FC<HandsonCardProps> = (props) => {
   const { handson } = props;
+  const start_time: Date = parse(
+    handson.start_at,
+    "yyyy-MM-dd'T'HH:mm",
+    new Date()
+  );
+  const now_minutes: string =
+    start_time.getMinutes().toString() === '0'
+      ? '00'
+      : start_time.getMinutes().toString();
+  const now_time = String(
+    start_time.getMonth().toString() +
+      '/' +
+      start_time.getDate().toString() +
+      ' ' +
+      start_time.getHours().toString() +
+      ':' +
+      now_minutes
+  );
   return (
     <HandsonCard>
       <CardMedia
@@ -77,17 +106,11 @@ const HandsonCardTemplete: React.FC<HandsonCardProps> = (props) => {
         <TitleBox component="div" whiteSpace="nowrap">
           <TitleTypoGraphy variant="h4">{handson.title}</TitleTypoGraphy>
         </TitleBox>
-        <DateTypoGraphy variant="h6">{handson.start_at}</DateTypoGraphy>
+        <DateTypoGraphy variant="h6">{now_time}</DateTypoGraphy>
       </HandsonContents>
     </HandsonCard>
   );
 };
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-}
 
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
@@ -115,10 +138,6 @@ function a11yProps(index: any) {
   };
 }
 
-type CenterdTabsProps = {
-  handsons: HandsonListItem[];
-  value: number;
-};
 const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
   const { handsons } = props;
   const classes = useStyles1();
@@ -127,7 +146,6 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setValue(newValue);
-    console.log(newValue);
   };
   return (
     <div className={classes.root}>
