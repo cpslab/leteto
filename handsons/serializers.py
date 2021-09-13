@@ -107,7 +107,7 @@ class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
+# Handson Member Serializer
 class HandsonMemberSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
@@ -121,3 +121,10 @@ class HandsonMemberSerializer(serializers.ModelSerializer):
                 fields=['user', 'handson']
             )
         ]
+
+    def create(self, validated_data):
+        member_data = validated_data.pop('user')
+        username = member_data.pop('username')
+        member = CustomUser.objects.get_or_create(username=username)[0]
+        handson_member = HandsonMember.objects.create(user=member, **validated_data)
+        return handson_member

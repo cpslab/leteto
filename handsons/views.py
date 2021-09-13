@@ -6,6 +6,7 @@ from .permissions import IsAuthorOrReadOnly
 from rest_framework.response import Response
 from django.utils import timezone
 from django.utils.timezone import localtime
+from .common_views import BaseListCreateAPIView, BaseRetrieveDestroyAPIView, BaseRetrieveUpdateDestroyAPIView
 
 # Create your views here.
 
@@ -79,16 +80,22 @@ class HandsonRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class HandsonMemberList(generics.ListCreateAPIView):
+# Handson Member API
+class NestedHandsonMemberListCreateView(generics.ListCreateAPIView):
     queryset = HandsonMember.objects.all()
     serializer_class = HandsonMemberSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def list(self, request, *args, **kwargs):
+        queryset = HandsonMember.objects.filter(handson=self.kwargs.get('pk'))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
-class HandsonMemberRetrieveDestroyView(generics.RetrieveDestroyAPIView):
+class NestedHandsonMemberRetrieveDestroyView(BaseRetrieveDestroyAPIView):
     queryset = HandsonMember.objects.all()
     serializer_class = HandsonMemberSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    lookup_fields = ('handson', 'pk')
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class NestedHandsonMember(generics.ListAPIView):
