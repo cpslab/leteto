@@ -36,6 +36,7 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
                 except: 
                     # CustomUser matching query does not exist
                     raise exceptions.ParseError('Invalid Request')
+
         """
         Optionally restricts the returned handsons to a given datetime,
         by filtering against a `status` query parameter in the URL.
@@ -51,10 +52,28 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
                 queryset = queryset.filter(start_at__lte=now, end_at__gte=now)
             else:
                 raise exceptions.ParseError('Invalid Request')
+
+        """
+        Optionally restricts the returned handsons to a given joined handson by any user,
+        by filtering against a `join` query parameter in the URL.
+        """
+        join_user_id = self.request.query_params.get('join')
+        if join_user_id is not None:
+            join_user = None
+            if join_user_id == 'me':
+                join_user = self.request.user
+            else:
+                try:
+                    join_user = CustomUser.objects.get(id=join_user_id)
+                except:
+                    # CustomUser matching query does not exist
+                    raise exceptions.ParseError('Invalid Request')
+                    
+            join_handson_member = HandsonMember.objects.filter(user=join_user).values()
+            join_handsons = [handson_member['handson_id'] for handson_member in list(join_handson_member)]
+            queryset = queryset.filter(id__in=join_handsons)
+
         return queryset
-
-# Handson detail & update & delete
-
 
 class HandsonRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Handson.objects.all()
