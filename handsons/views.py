@@ -1,29 +1,27 @@
-from django.shortcuts import render
-from rest_framework import generics, permissions
-
+from rest_framework import generics, permissions, exceptions
 from users.models import CustomUser
 from .models import Handson, HandsonMember
 from .serializers import HandsonListCreateSerializer, HandsonRetrieveUpdateDestroySerializer, HandsonMemberSerializer
 from .permissions import IsAuthorOrReadOnly
-import django_filters.rest_framework as filters
-from rest_framework import exceptions
 from rest_framework.response import Response
 from django.utils import timezone
 from django.utils.timezone import localtime
 
 # Create your views here.
 
-# Handson list & create
 
+# Handson API
 class HandsonListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = HandsonListCreateSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
+        queryset = Handson.objects.order_by('-start_at')
+
         """
         Optionally restricts the returned handsons to a given user,
         by filtering against a `owner` query parameter in the URL.
         """
-        queryset = Handson.objects.order_by('-start_at')
         owner_id = self.request.query_params.get('owner')
         if owner_id is not None:
             if owner_id == 'me':

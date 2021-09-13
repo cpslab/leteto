@@ -4,8 +4,6 @@ from .models import Handson, CustomUser, HandsonMember
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 # User
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -16,10 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
 
-# Handson list & create
-
-
+# Handson Serializer
 class HandsonListCreateSerializer(serializers.ModelSerializer):
+
     owner = UserSerializer()
 
     class Meta:
@@ -59,7 +56,7 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
         owner = CustomUser.objects.get_or_create(username=username)[0]
         handson = Handson.objects.create(owner=owner, **validated_data)
         return handson
-    
+
     def validate(self, data):
         """
         Check that start_at is before end_at.
@@ -68,11 +65,10 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("end_at must occur after start_at")
         return data
 
-# Handson detail & update & delete
-
-
 class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
+
     owner = UserSerializer()
+
     class Meta:
         model = Handson
         fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public')
@@ -96,6 +92,7 @@ class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
                 'allow_blank' : True,
             },
         }
+
     def update(self, instance, validated_data):
         instance.title = validated_data['title']
         instance.headline = validated_data['headline']
