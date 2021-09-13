@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from .models import Handson, CustomUser, HandsonMember
+from .models import ContentPassMember, Handson, CustomUser, HandsonContent, HandsonMember
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 # User
@@ -128,3 +128,17 @@ class HandsonMemberSerializer(serializers.ModelSerializer):
         member = CustomUser.objects.get_or_create(username=username)[0]
         handson_member = HandsonMember.objects.create(user=member, **validated_data)
         return handson_member
+
+# Handson Content Serializer
+class HandsonContentSerializer(serializers.ModelSerializer):
+
+     class Meta:
+         model = HandsonContent
+         fields = ['handson', 'content', 'id']
+
+# Content Pass Serializer
+class HandsonContentPassMemberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContentPassMember
+        fields = ['content', 'user', 'id']
