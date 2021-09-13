@@ -16,13 +16,10 @@ export type HandsonListLayoutProps = {
   handsons: HandsonListItem[];
 };
 
-// APPBASE 土台
-const useStyles1 = makeStyles({
-  root: {
-    flexGrow: 0,
-    paddingBottom: '5px',
-  },
-});
+const CenterdTabsBase = styled.div`
+  flex-grow: 0;
+  padding-bottom: 5px;
+`;
 
 const HandsonCard = styled(Card)`
   margin-top: 10px;
@@ -140,7 +137,6 @@ function a11yProps(index: any) {
 
 const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
   const { handsons } = props;
-  const classes = useStyles1();
   const [value, setValue] = React.useState<string>('one');
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -148,7 +144,7 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
     setValue(newValue);
   };
   return (
-    <div className={classes.root}>
+    <CenterdTabsBase>
       <AppBar position="static">
         <HandsonTypeTabs
           value={value}
@@ -193,7 +189,7 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
           );
         })}
       </TabPanel>
-    </div>
+    </CenterdTabsBase>
   );
 };
 
