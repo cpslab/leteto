@@ -78,7 +78,7 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
 class HandsonRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Handson.objects.all()
     serializer_class = HandsonRetrieveUpdateDestroySerializer
-    lookup_field = 'id'
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class HandsonMemberList(generics.ListCreateAPIView):
