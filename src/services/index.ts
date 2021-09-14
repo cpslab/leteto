@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import * as serviceTypes from './service-types';
+import { HandsonListItem } from './service-types';
 
 // create http instance
 const service_url =
@@ -94,6 +95,19 @@ export const getCurrentUser = async (): Promise<serviceTypes.User> => {
 };
 
 // Handson Service
+/**
+ * Get handsonlist
+ * api/v1/handsons
+ */
+export const getHandsons = async (): Promise<HandsonListItem[]> => {
+  const result = await http.get<HandsonListItem[]>('api/v1/handsons/');
+  if ('data' in result && result.data) {
+    const data = result.data;
+    return data;
+  }
+  throw new Error('Invalid');
+};
+
 /**
  * Create handson
  * api/v1/handsons
