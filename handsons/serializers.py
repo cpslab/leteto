@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 from rest_framework.validators import UniqueTogetherValidator
 from .models import ContentPassMember, Handson, CustomUser, HandsonContent, HandsonMember
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -14,48 +15,54 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
 
+
 # Handson Serializer
-class HandsonListCreateSerializer(serializers.ModelSerializer):
+class HandsonReadListSerializer(serializers.ModelSerializer):
 
     owner = UserSerializer()
 
     class Meta:
         model = Handson
-        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url',
-                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public')
-        extra_kwargs = {
-            'headline': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'detail': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'require': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'document_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'meeting_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'movie_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-        }
+        fields = ['id', 'owner', 'title', 'start_at', 'end_at']
 
-    def create(self, validated_data):
-        owner_data = validated_data.pop('owner')
-        username = owner_data.pop('username')
-        owner = CustomUser.objects.get_or_create(username=username)[0]
-        handson = Handson.objects.create(owner=owner, **validated_data)
-        return handson
+class HandsonReadSerializer(serializers.ModelSerializer):
+
+    owner = UserSerializer()
+    members = SerializerMethodField()
+    contents = SerializerMethodField()
+
+    class Meta:
+        model = Handson
+        fields = ['id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url',
+                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'members', 'contents']
+
+    def get_members(self, obj):
+        try:
+            members = HandsonMemberReadSerializer(HandsonMember.objects.all().filter(handson=Handson.objects.get(id=obj.id)), many=True).data
+            return members
+        except:
+            members = None
+            return members
+
+    def get_contents(self, obj):
+        try:
+            contents = HandsonContentReadSerializer(HandsonContent.objects.all().filter(handson=Handson.objects.get(id=obj.id)), many=True).data
+            return contents
+        except:
+            contents = None
+            return contents
+
+class HandsonWriteSerializer(serializers.ModelSerializer):
+
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Handson
+        fields = ['id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url',
+                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public']
+        read_only_fields = ['owner']
 
     def validate(self, data):
         """
@@ -65,80 +72,102 @@ class HandsonListCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("end_at must occur after start_at")
         return data
 
-class HandsonRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
-
-    owner = UserSerializer()
-
-    class Meta:
-        model = Handson
-        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url', 'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public')
-        extra_kwargs = {
-            'headline' : {
-                'allow_blank' : True,
-            },
-            'detail' : {
-                'allow_blank' : True,
-            },
-            'require' : {
-                'allow_blank' : True,
-            },
-            'document_url' : {
-                'allow_blank' : True,
-            },
-            'meeting_url' : {
-                'allow_blank' : True,
-            },
-            'movie_url' : {
-                'allow_blank' : True,
-            },
-        }
-
-    def update(self, instance, validated_data):
-        instance.title = validated_data['title']
-        instance.headline = validated_data['headline']
-        instance.detail = validated_data['detail']
-        instance.require = validated_data['require']
-        instance.document_url = validated_data['document_url']
-        instance.meeting_url = validated_data['meeting_url']
-        instance.movie_url = validated_data['movie_url']
-        instance.start_at = validated_data['start_at']
-        instance.end_at = validated_data['end_at']
-        instance.is_public = validated_data['is_public']
-        instance.save()
-        return instance
 
 # Handson Member Serializer
-class HandsonMemberSerializer(serializers.ModelSerializer):
+class HandsonMemberReadSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
+    member = UserSerializer()
 
     class Meta:
         model = HandsonMember
-        fields = ['user', 'handson', 'id']
+        fields = ['id', 'member', 'handson']
+
+class HandsonMemberWriteSerializer(serializers.ModelSerializer):
+
+    member = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = HandsonMember
+        fields = ['id', 'member', 'handson']
+        read_only_fields = ['member']
         validators = [
             UniqueTogetherValidator(
                 queryset=HandsonMember.objects.all(),
-                fields=['user', 'handson']
+                fields=['member', 'handson']
+            )
+        ]
+
+
+# Handson Content Serializer
+class HandsonContentReadSerializer(serializers.ModelSerializer):
+
+    passed_members = SerializerMethodField()
+
+    class Meta:
+        model = HandsonContent
+        fields = ['id', 'handson', 'content', 'passed_members']
+
+    def get_passed_members(self, obj):
+        try:
+            members = HandsonContentPassMemberReadSerializer(ContentPassMember.objects.all().filter(content=HandsonContent.objects.get(id=obj.id)), many=True).data
+            return members
+        except:
+            members = None
+            return members
+
+class HandsonContentWriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = HandsonContent
+        fields = ['id', 'handson', 'content']
+
+    def create(self, validated_data):
+        handson = validated_data.pop('handson')
+        owner = handson.owner
+        if owner == self.context['request'].user:
+            content = HandsonContent.objects.create(handson=handson, **validated_data)
+            return content
+        else:
+            raise serializers.ValidationError("you are not handson owner")
+
+
+# Content Pass Serializer
+class HandsonContentPassMemberReadSerializer(serializers.ModelSerializer):
+
+    member = UserSerializer()
+
+    class Meta:
+        model = ContentPassMember
+        fields = ['id', 'content', 'member']
+        read_only_fields = ['member']
+
+class HandsonContentPassMemberWriteSerializer(serializers.ModelSerializer):
+
+    member = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = ContentPassMember
+        fields = ['id', 'content', 'member']
+        read_only_fields = ['member']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=ContentPassMember.objects.all(),
+                fields=['content', 'member']
             )
         ]
 
     def create(self, validated_data):
-        member_data = validated_data.pop('user')
-        username = member_data.pop('username')
-        member = CustomUser.objects.get_or_create(username=username)[0]
-        handson_member = HandsonMember.objects.create(user=member, **validated_data)
-        return handson_member
-
-# Handson Content Serializer
-class HandsonContentSerializer(serializers.ModelSerializer):
-
-     class Meta:
-         model = HandsonContent
-         fields = ['handson', 'content', 'id']
-
-# Content Pass Serializer
-class HandsonContentPassMemberSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ContentPassMember
-        fields = ['content', 'user', 'id']
+        member = validated_data.pop('member')
+        content = validated_data.pop('content')
+        handson = content.handson
+        handson_members = HandsonMember.objects.filter(handson=handson)
+        members = [handson_member.member for handson_member in handson_members]
+        if member in members and member == self.context['request'].user:
+            content_pass_member = ContentPassMember.objects.create(member=member, content=content,**validated_data)
+            return content_pass_member
+        else:
+            raise serializers.ValidationError("you are not handson member")

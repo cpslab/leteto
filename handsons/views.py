@@ -1,20 +1,28 @@
 from rest_framework import generics, permissions, exceptions
 from users.models import CustomUser
 from .models import ContentPassMember, Handson, HandsonContent, HandsonMember
-from .serializers import HandsonContentPassMemberSerializer, HandsonContentSerializer, HandsonListCreateSerializer, HandsonRetrieveUpdateDestroySerializer, HandsonMemberSerializer
-from .permissions import IsAuthorOrReadOnly
+from .serializers import HandsonContentPassMemberReadSerializer, HandsonContentPassMemberWriteSerializer, HandsonContentReadSerializer, HandsonContentWriteSerializer, HandsonMemberReadSerializer, HandsonMemberWriteSerializer, HandsonReadListSerializer, HandsonReadSerializer, HandsonWriteSerializer
+from .permissions import IsContentOwnerOrReadOnly, IsHandsonMemberOrReadOnly, IsMemberOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.response import Response
 from django.utils import timezone
 from django.utils.timezone import localtime
-from .common_views import BaseListCreateAPIView, BaseRetrieveDestroyAPIView, BaseRetrieveUpdateDestroyAPIView
+from .common_views import BaseRetrieveDestroyAPIView, BaseRetrieveUpdateDestroyAPIView
 
 # Create your views here.
 
 
 # Handson API
 class HandsonListCreateAPIView(generics.ListCreateAPIView):
-    serializer_class = HandsonListCreateSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonReadListSerializer
+        else:
+            return HandsonWriteSerializer
+    
+    def get_permissions(self):
+        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = Handson.objects.order_by('-start_at')
@@ -74,17 +82,37 @@ class HandsonListCreateAPIView(generics.ListCreateAPIView):
 
         return queryset
 
-class HandsonRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Handson.objects.all()
-    serializer_class = HandsonRetrieveUpdateDestroySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+class HandsonRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonReadSerializer
+        else:
+            return HandsonWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsOwnerOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return Handson.objects.all()
 
 
 # Handson Member API
 class NestedHandsonMemberListCreateView(generics.ListCreateAPIView):
-    queryset = HandsonMember.objects.all()
-    serializer_class = HandsonMemberSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonMemberReadSerializer
+        else:
+            return HandsonMemberWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return HandsonMember.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = HandsonMember.objects.filter(handson=self.kwargs.get('pk'))
@@ -92,17 +120,38 @@ class NestedHandsonMemberListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 class NestedHandsonMemberRetrieveDestroyView(BaseRetrieveDestroyAPIView):
-    queryset = HandsonMember.objects.all()
-    serializer_class = HandsonMemberSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonMemberReadSerializer
+        else:
+            return HandsonMemberWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsMemberOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return HandsonMember.objects.all()
+
     lookup_fields = ('handson', 'pk')
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 # Handson Content API
 class NestedHandsonContentListCreateView(generics.ListCreateAPIView):
-    queryset = HandsonContent.objects.all()
-    serializer_class = HandsonContentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonContentReadSerializer
+        else:
+            return HandsonContentWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsContentOwnerOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return HandsonContent.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = HandsonContent.objects.filter(handson=self.kwargs.get('pk'))
@@ -110,17 +159,38 @@ class NestedHandsonContentListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 class NestedHandsonContentRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyAPIView):
-    queryset = HandsonContent.objects.all()
-    serializer_class = HandsonContentSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonContentReadSerializer
+        else:
+            return HandsonContentWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsContentOwnerOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return HandsonContent.objects.all()
+    
     lookup_fields = ('handson', 'pk')
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 # Content Pass Member API
-class NestedHandsonContentPassMemberView(generics.ListCreateAPIView):
-    queryset = ContentPassMember.objects.all()
-    serializer_class = HandsonContentPassMemberSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+class NestedHandsonContentPassMemberListCreateView(generics.ListCreateAPIView):
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonContentPassMemberReadSerializer
+        else:
+            return HandsonContentPassMemberWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsHandsonMemberOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return ContentPassMember.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = ContentPassMember.objects.filter(content=self.kwargs.get('pk'))
@@ -128,7 +198,18 @@ class NestedHandsonContentPassMemberView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 class NestedHandsonContentPassMemberRetrieveDestroyView(BaseRetrieveDestroyAPIView):
-    queryset = ContentPassMember.objects.all()
-    serializer_class = HandsonContentPassMemberSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return HandsonContentPassMemberReadSerializer
+        else:
+            return HandsonContentPassMemberWriteSerializer
+
+    def get_permissions(self):
+        permission_classes = [IsHandsonMemberOrReadOnly]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return ContentPassMember.objects.all()
+    
     lookup_fields = ('content', 'pk')
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
