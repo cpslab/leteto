@@ -1,18 +1,23 @@
 import React from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { useAuth } from '../../../auth/AuthProvider';
-import { updateHandson, getHandson } from '../../../services';
-import { HandsonEditPageParams } from '../../../routes/params-types';
 import {
-  UpdateHandsonRequest,
-  HandsonDetailItem,
-} from '../../../services/service-types';
-import { HandsonFormLayout } from '../../../layouts/handson/HandsonFormLayout';
+  updateHandson,
+  getHandson,
+  updateHandsonContent,
+} from '../../../services';
+import { HandsonEditPageParams } from '../../../routes/params-types';
+import { HandsonDetail } from '../../../entity';
+import {
+  HandsonFormLayout,
+  HandsonFormProps,
+} from '../../../layouts/handson/HandsonFormLayout';
 
 export const HandsonEditPage = (): JSX.Element => {
   const { id } = useParams<HandsonEditPageParams>();
+  const history = useHistory();
   const auth = useAuth();
-  const [handson, setHandson] = React.useState<HandsonDetailItem>();
+  const [handson, setHandson] = React.useState<HandsonDetail>();
 
   React.useEffect(() => {
     (async function () {
@@ -22,23 +27,28 @@ export const HandsonEditPage = (): JSX.Element => {
         });
         setHandson(data);
       }
-    });
+    })();
   }, []);
 
-  const onUpdateHandson = async (
-    data: Omit<UpdateHandsonRequest, 'id' | 'owner' | 'is_public'>
-  ) => {
+  const onUpdateHandson = async (data: HandsonFormProps) => {
     try {
-      if (handson?.id && auth.currentUser?.username) {
+      if (handson?.id && auth.currentUser) {
         await updateHandson({
           ...data,
           id: handson.id,
-          owner: {
-            id: auth.currentUser.pk,
-            username: auth.currentUser?.username,
-          },
           is_public: true,
         });
+        data.contents.forEach(async (updateContent) => {
+          // handson.contentにもdata.contentsにも存在している時はupdate
+          // handson.contentに存在していてdata.contentsにないものはdelete
+          // handson.contentに存在していなくてdata.contentsにあるものはcreate
+          await updateHandsonContent({
+            id: updateContent.id,
+            handson: handson.id,
+            content: updateContent.content,
+          });
+        });
+        history.push('/handsons/' + handson.id);
       }
     } catch (e) {
       console.log(e);
@@ -50,6 +60,7 @@ export const HandsonEditPage = (): JSX.Element => {
       pageTitleText="編集"
       submitButtonText="更新"
       handson={handson}
+      contents={handson?.contents}
       handleHandsonFormSubmit={(v) => onUpdateHandson(v)}
     ></HandsonFormLayout>
   );

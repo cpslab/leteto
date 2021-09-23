@@ -52,15 +52,15 @@ Update.args = {
     end_at: '2021-09-10T11:00',
     is_public: true,
   },
-  handsonContents: [
+  contents: [
     {
       id: 1,
-      handsonId: 1,
+      handson: 1,
       content: 'vue-cliを使ってみる',
     },
     {
       id: 2,
-      handsonId: 1,
+      handson: 1,
       content: 'npm startしてみる',
     },
   ],

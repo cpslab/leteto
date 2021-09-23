@@ -5,7 +5,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 import { HandsonListLayout, HandsonListLayoutProps } from '.';
 
 export default {
-  title: 'layout/HandsonListLayout',
+  title: 'layout/handson/HandsonListLayout',
   component: HandsonListLayout,
   argTypes: {
     backgroundColor: { control: 'color' },
@@ -28,7 +28,6 @@ Default.args = {
       title: 'Vue.js開発ハンズオン',
       start_at: '2021-09-10T10:00',
       end_at: '2021-09-10T11:00',
-      is_public: true,
     },
     {
       id: 1,
@@ -39,7 +38,6 @@ Default.args = {
       title: 'React.js開発ハンズオン',
       start_at: '2021-09-10T10:00',
       end_at: '2021-09-10T11:00',
-      is_public: true,
     },
     {
       id: 4,
@@ -50,7 +48,6 @@ Default.args = {
       title: 'Djangoハンズオン',
       start_at: '2021-09-10T10:00',
       end_at: '2021-09-10T11:00',
-      is_public: true,
     },
     {
       id: 2,
@@ -61,7 +58,6 @@ Default.args = {
       title: 'Ruby on Railsハンズオン',
       start_at: '2021-09-10T10:00',
       end_at: '2021-09-10T11:00',
-      is_public: true,
     },
     {
       id: 5,
@@ -72,7 +68,6 @@ Default.args = {
       title: 'M5Stackハンズオン',
       start_at: '2021-09-10T10:00',
       end_at: '2021-09-10T11:00',
-      is_public: true,
     },
     {
       id: 6,
@@ -83,7 +78,6 @@ Default.args = {
       title: 'Linuxハンズオン',
       start_at: '2021-10-10T10:00',
       end_at: '2021-10-10T11:00',
-      is_public: true,
     },
   ],
 };
