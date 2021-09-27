@@ -97,7 +97,7 @@ export const HandsonDetailContent = (
                 <>
                   <ContentItemContainer>
                     <Grid container>
-                      <GrowContainer item flex={true}>
+                      <GrowContainer item isflex="true">
                         <SpacingContainer spacing={1} container>
                           <Grid item>{content.content}</Grid>
                           <Grid container item>
