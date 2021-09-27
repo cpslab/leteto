@@ -1,10 +1,17 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import * as API from '../services';
-import { User } from '../services/service-types';
 import * as H from 'history';
 
+export type AuthenticatedUser = {
+  pk: number;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+};
+
 type authContextType = {
-  currentUser: User | null | undefined;
+  currentUser: AuthenticatedUser | null | undefined;
   signin: (
     username: string,
     email: string,
@@ -36,9 +43,9 @@ function createCtx<ContextType>() {
 }
 
 const useAuthContext = (): authContextType => {
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(
-    undefined
-  );
+  const [currentUser, setCurrentUser] = useState<
+    AuthenticatedUser | null | undefined
+  >(undefined);
 
   const signin = async (
     username: string,

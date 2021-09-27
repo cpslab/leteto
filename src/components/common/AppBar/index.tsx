@@ -11,7 +11,7 @@ import styled from 'styled-components/macro';
 export type AppBarProps = {
   left: JSX.Element;
   right: JSX.Element;
-  bgColor?: PropTypes.Color | 'transparent';
+  bgcolor?: PropTypes.Color | 'transparent';
 };
 
 const AppBarComponent = styled(MuiAppBar)``;
@@ -20,10 +20,10 @@ const LeftGrid = styled(MuiGrid)`
   flex-grow: 1;
 `;
 
-export const AppBar = ({ left, right, bgColor }: AppBarProps): JSX.Element => {
+export const AppBar = ({ left, right, bgcolor }: AppBarProps): JSX.Element => {
   return (
     <React.Fragment>
-      <AppBarComponent position="static" color={bgColor}>
+      <AppBarComponent position="static" color={bgcolor}>
         <Toolbar>
           <LeftGrid>{left}</LeftGrid>
           <Grid container justify="flex-end">

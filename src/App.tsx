@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
   ThemeProvider as MaterialThemeProvider,
   StylesProvider,
@@ -16,6 +16,7 @@ import { SignUpPage } from './pages/SignUpPage';
 import { HandsonListPage } from './pages/handson/HandsonListPage';
 import { HandsonCreatePage } from './pages/handson/HandsonCreatePage';
 import { HandsonEditPage } from './pages/handson/HandsonEditPage';
+import { HandsonDetailPage } from './pages/handson/HandsonDetailPage';
 
 const theme = createTheme();
 
@@ -27,24 +28,36 @@ function App(): JSX.Element {
           <AuthProvider>
             <CssBaseline />
             <Router>
-              <AuthenticatedRoute exact path="/"></AuthenticatedRoute>
-              <Route exact path="/signin" component={SignInPage}></Route>
-              <Route exact path="/signup" component={SignUpPage}></Route>
-              <PrivateRoute
-                exact
-                path="/handsons"
-                component={HandsonListPage}
-              ></PrivateRoute>
-              <PrivateRoute
-                exact
-                path="/handsons/create"
-                component={HandsonCreatePage}
-              ></PrivateRoute>
-              <PrivateRoute
-                exact
-                path="/handsons/:id/edit"
-                component={HandsonEditPage}
-              ></PrivateRoute>
+              <Switch>
+                <AuthenticatedRoute exact path="/"></AuthenticatedRoute>
+                <Route exact path="/signin" component={SignInPage}></Route>
+                <Route exact path="/signup" component={SignUpPage}></Route>
+                <PrivateRoute
+                  exact
+                  path="/handsons"
+                  component={HandsonListPage}
+                ></PrivateRoute>
+                <PrivateRoute
+                  exact
+                  path="/handsons/create"
+                  component={HandsonCreatePage}
+                ></PrivateRoute>
+                <PrivateRoute
+                  exact
+                  path="/handsons/:id"
+                  component={HandsonDetailPage}
+                ></PrivateRoute>
+                <PrivateRoute
+                  exact
+                  path="/handsons/:id/edit"
+                  component={HandsonEditPage}
+                ></PrivateRoute>
+                <PrivateRoute
+                  exact
+                  path="/handsons/:id/:pages"
+                  component={HandsonDetailPage}
+                ></PrivateRoute>
+              </Switch>
             </Router>
           </AuthProvider>
         </StyledThemeProvider>

@@ -10,22 +10,26 @@ import {
 import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
-  HandsonDetailItem,
-  HandsonContent,
-} from '../../../services/service-types';
+  useForm,
+  SubmitHandler,
+  useFieldArray,
+  UseFormRegisterReturn,
+} from 'react-hook-form';
+import { HandsonDetailWrite, HandsonContentWrite } from '../../../entity';
 import { AppBase } from '../../../components/common/AppBase';
 import { AppBar } from '../../../components/common/AppBar';
 import { AppMain } from '../../../components/common/AppMain';
-import { SpacingContainer } from '../../../components/common/SpacingContainer';
+import { GrowContainer } from '../../../components/common/GrowContainer';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
+import { useHistory } from 'react-router';
+import { format } from 'date-fns';
 
 export type HandsonFormLayoutProps = {
   pageTitleText: string;
   submitButtonText: string;
-  handson?: HandsonDetailItem;
-  handsonContents?: HandsonContent[];
+  handson?: HandsonDetailWrite;
+  contents?: HandsonContentWrite[];
   handleHandsonFormSubmit: (props: HandsonFormProps) => void;
 };
 
@@ -39,16 +43,12 @@ export type HandsonFormProps = {
   meeting_url: string;
   movie_url: string;
   require: string;
-  contents: string[];
+  contents: HandsonContentWrite[];
 };
 
 const ContentGrid = styled(MuiGrid)`
   padding: ${(props) => props.theme.spacing(6)}px
     ${(props) => props.theme.spacing(20)}px;
-`;
-
-const GrowGrid = styled(MuiGrid)`
-  flex-grow: 1;
 `;
 
 const FormPaper = styled(MuiPaper)`
@@ -59,47 +59,74 @@ const FormPaper = styled(MuiPaper)`
 export const HandsonFormLayout = (
   props: HandsonFormLayoutProps
 ): JSX.Element => {
-  const { handson, handleHandsonFormSubmit } = props;
+  const { handson, contents, handleHandsonFormSubmit } = props;
+  const history = useHistory();
+
   const {
     control,
     handleSubmit,
+    register,
     formState: { errors },
+    reset,
   } = useForm<HandsonFormProps>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'contents',
+  });
+
+  const registerMui = (res: UseFormRegisterReturn) => ({
+    inputRef: res.ref,
+    onChange: res.onChange,
+    onBlur: res.onBlur,
+    name: res.name,
+  });
 
   const onSubmit: SubmitHandler<HandsonFormProps> = (data) => {
-    console.log(data);
     handleHandsonFormSubmit(data);
   };
+
+  React.useEffect(() => {
+    if (handson) {
+      reset({
+        ...handson,
+        start_at: format(new Date(handson.start_at), "yyyy-MM-dd'T'HH:mm"),
+        end_at: format(new Date(handson.end_at), "yyyy-MM-dd'T'HH:mm"),
+        contents: contents || [],
+      });
+    }
+  }, [handson, contents]);
 
   return (
     <AppBase>
       <AppBar
         left={
           <>
-            <IconButton>
+            <IconButton
+              onClick={() =>
+                handson
+                  ? history.push('/handsons/' + handson.id)
+                  : history.push('/handsons')
+              }
+            >
               <ArrowBackIosIcon />
             </IconButton>
           </>
         }
-        right={
-          <>
-            <Button color="inherit">マイページ</Button>
-          </>
-        }
+        right={<></>}
       ></AppBar>
 
       <AppMain>
         <ContentGrid>
-          <SpacingContainer container spacing={2}>
+          <Grid container spacing={2}>
             <Grid container item>
               <Typography variant="h5">{props.pageTitleText}</Typography>
             </Grid>
-            <SpacingContainer item flex={true}>
+            <GrowContainer item flex={true}>
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <SpacingContainer container spacing={2}>
-                  <GrowGrid container item>
+                <Grid container spacing={2}>
+                  <GrowContainer container item flex={true}>
                     <FormPaper>
-                      <SpacingContainer
+                      <GrowContainer
                         container
                         direction="column"
                         spacing={3}
@@ -107,61 +134,37 @@ export const HandsonFormLayout = (
                       >
                         <Grid item>
                           <Typography variant="h6">タイトル</Typography>
-                          <Controller
-                            name="title"
-                            control={control}
-                            defaultValue={handson?.title || ''}
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                              return (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  variant="outlined"
-                                ></TextField>
-                              );
-                            }}
-                          ></Controller>
+                          <TextField
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            {...registerMui(
+                              register('title', { required: true })
+                            )}
+                          ></TextField>
                           {errors.title && (
                             <ErrorMessage message="タイトルは必須項目です"></ErrorMessage>
                           )}
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">見出し</Typography>
-                          <Controller
-                            name="headline"
-                            control={control}
-                            defaultValue={handson?.headline || ''}
-                            render={({ field }) => {
-                              return (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  variant="outlined"
-                                  multiline
-                                ></TextField>
-                              );
-                            }}
-                          ></Controller>
+                          <TextField
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            {...registerMui(register('headline'))}
+                          ></TextField>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">開催日時</Typography>
-                          <SpacingContainer container spacing={2}>
+                          <Grid container spacing={2}>
                             <Grid item>
-                              <Controller
-                                name="start_at"
-                                control={control}
-                                defaultValue={handson?.start_at || ''}
-                                rules={{ required: true }}
-                                render={({ field }) => {
-                                  return (
-                                    <TextField
-                                      {...field}
-                                      type="datetime-local"
-                                    ></TextField>
-                                  );
-                                }}
-                              ></Controller>
+                              <TextField
+                                type="datetime-local"
+                                {...registerMui(
+                                  register('start_at', { required: true })
+                                )}
+                              ></TextField>
                               {errors.start_at && (
                                 <ErrorMessage message="開始日時は必須項目です"></ErrorMessage>
                               )}
@@ -170,161 +173,112 @@ export const HandsonFormLayout = (
                               <Typography variant="caption">~</Typography>
                             </Grid>
                             <Grid item>
-                              <Controller
-                                name="end_at"
-                                control={control}
-                                defaultValue={handson?.end_at || ''}
-                                rules={{ required: true }}
-                                render={({ field }) => {
-                                  return (
-                                    <TextField
-                                      {...field}
-                                      type="datetime-local"
-                                    ></TextField>
-                                  );
-                                }}
-                              ></Controller>
+                              <TextField
+                                type="datetime-local"
+                                {...registerMui(
+                                  register('end_at', { required: true })
+                                )}
+                              ></TextField>
                               {errors.end_at && (
                                 <ErrorMessage message="終了日時は必須項目です"></ErrorMessage>
                               )}
                             </Grid>
-                          </SpacingContainer>
+                          </Grid>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義詳細</Typography>
-                          <Controller
-                            name="detail"
-                            control={control}
-                            defaultValue={handson?.detail || ''}
-                            render={({ field }) => {
-                              return (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  variant="outlined"
-                                  multiline
-                                ></TextField>
-                              );
-                            }}
-                          ></Controller>
+                          <TextField
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            multiline
+                            {...registerMui(register('detail'))}
+                          ></TextField>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義情報</Typography>
-                          <SpacingContainer
-                            container
-                            direction="column"
-                            spacing={2}
-                          >
+                          <Grid container direction="column" spacing={2}>
                             <Grid item>
                               <Typography variant="caption">
                                 講義資料URL
                               </Typography>
-                              <Controller
-                                name="document_url"
-                                control={control}
-                                defaultValue={handson?.document_url || ''}
-                                render={({ field }) => {
-                                  return (
-                                    <TextField
-                                      {...field}
-                                      fullWidth
-                                      variant="outlined"
-                                      size="small"
-                                    ></TextField>
-                                  );
-                                }}
-                              ></Controller>
+                              <TextField
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                {...registerMui(register('document_url'))}
+                              ></TextField>
                             </Grid>
                             <Grid item>
                               <Typography variant="caption">
                                 会議先URL
                               </Typography>
-                              <Controller
-                                name="meeting_url"
-                                control={control}
-                                defaultValue={handson?.meeting_url || ''}
-                                render={({ field }) => {
-                                  return (
-                                    <TextField
-                                      {...field}
-                                      fullWidth
-                                      variant="outlined"
-                                      size="small"
-                                    ></TextField>
-                                  );
-                                }}
-                              ></Controller>
+                              <TextField
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                {...registerMui(register('meeting_url'))}
+                              ></TextField>
                             </Grid>
                             <Grid item>
                               <Typography variant="caption">
                                 講義動画URL
                               </Typography>
-                              <Controller
-                                name="movie_url"
-                                control={control}
-                                defaultValue={handson?.movie_url || ''}
-                                render={({ field }) => {
-                                  return (
-                                    <TextField
-                                      {...field}
-                                      fullWidth
-                                      variant="outlined"
-                                      size="small"
-                                    ></TextField>
-                                  );
-                                }}
-                              ></Controller>
+                              <TextField
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                {...registerMui(register('movie_url'))}
+                              ></TextField>
                             </Grid>
-                          </SpacingContainer>
+                          </Grid>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">講義内容</Typography>
-                          <Controller
-                            name="contents"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => {
-                              return (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  variant="outlined"
-                                  multiline
-                                ></TextField>
-                              );
-                            }}
-                          ></Controller>
+                          {fields.map((field, index) => (
+                            <div key={index}>
+                              <TextField
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                multiline
+                                defaultValue={field.content}
+                                {...registerMui(
+                                  register(`contents.${index}.content`)
+                                )}
+                              ></TextField>
+                              <Button onClick={() => remove(index)}>
+                                削除
+                              </Button>
+                            </div>
+                          ))}
+                          <Button onClick={() => append({})}>追加</Button>
                         </Grid>
                         <Grid item>
                           <Typography variant="h6">要件</Typography>
-                          <Controller
-                            name="require"
-                            control={control}
-                            defaultValue={handson?.require || ''}
-                            render={({ field }) => {
-                              return (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  variant="outlined"
-                                  multiline
-                                ></TextField>
-                              );
-                            }}
-                          ></Controller>
+                          <TextField
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            multiline
+                            {...registerMui(register('require'))}
+                          ></TextField>
                         </Grid>
-                      </SpacingContainer>
+                      </GrowContainer>
                     </FormPaper>
-                  </GrowGrid>
+                  </GrowContainer>
                   <Grid container item justify="center">
                     <Button variant="contained" color="primary" type="submit">
                       {props.submitButtonText}
                     </Button>
                   </Grid>
-                </SpacingContainer>
+                </Grid>
               </form>
-            </SpacingContainer>
-          </SpacingContainer>
+            </GrowContainer>
+          </Grid>
         </ContentGrid>
       </AppMain>
     </AppBase>

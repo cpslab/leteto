@@ -32,5 +32,5 @@ Default.args = {
       <Button color="inherit">サインアップ</Button>
     </>
   ),
-  bgColor: 'inherit',
+  bgcolor: 'inherit',
 };

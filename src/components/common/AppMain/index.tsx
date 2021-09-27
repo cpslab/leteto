@@ -4,16 +4,16 @@ import { spacing } from '@material-ui/system';
 import styled from 'styled-components/macro';
 
 type AppMainProps = {
-  bgColor?: PropTypes.Color;
+  bgcolor?: PropTypes.Color;
   children: React.ReactNode;
 };
 
 const Paper = styled(MuiPaper)(spacing);
 
-const MainContent = styled(Paper)<Pick<AppMainProps, 'bgColor'>>`
+const MainContent = styled(Paper)<Pick<AppMainProps, 'bgcolor'>>`
   flex: 1;
   background-color: ${(props) => {
-    switch (props.bgColor) {
+    switch (props.bgcolor) {
       case 'primary':
         return props.theme.palette.primary.main;
 
@@ -30,5 +30,5 @@ const MainContent = styled(Paper)<Pick<AppMainProps, 'bgColor'>>`
 `;
 
 export const AppMain = (props: AppMainProps): JSX.Element => {
-  return <MainContent bgColor={props.bgColor}>{props.children}</MainContent>;
+  return <MainContent bgcolor={props.bgcolor}>{props.children}</MainContent>;
 };

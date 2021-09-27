@@ -1,19 +1,31 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components/macro';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { AppBar, Tab, Tabs, Button, Box } from '@material-ui/core';
-import { HandsonListItem } from '../../../services/service-types';
+import {
+  AppBar,
+  Tab,
+  Tabs,
+  Box,
+  CardActionArea,
+  IconButton,
+} from '@material-ui/core';
+import { Handson } from '../../../entity';
 import { AppBar as CustomAppBar } from '../../../components/common/AppBar';
 import { AppBase } from '../../../components/common/AppBase';
-import { parse } from 'date-fns';
+import { format } from 'date-fns';
+import { Link, useHistory } from 'react-router-dom';
+import {
+  NoteAdd as HandsonAddIcon,
+  ExitToApp as LogoutIcon,
+} from '@material-ui/icons';
+import { useAuth } from '../../../auth/AuthProvider';
 
 export type HandsonListLayoutProps = {
-  handsons: HandsonListItem[];
+  handsons: Handson[];
 };
 
 const CenterdTabsBase = styled.div`
@@ -48,6 +60,7 @@ const HandsonContents = styled(CardContent)`
 `;
 
 const DateTypoGraphy = styled(Typography)`
+  padding-right: ${(props) => props.theme.spacing(1)}px;
   text-align: right;
 `;
 
@@ -56,7 +69,7 @@ const HandsonTypeTabs = styled(Tabs)`
 `;
 
 type HandsonCardProps = {
-  handson: HandsonListItem;
+  handson: Handson;
 };
 
 interface TabPanelProps {
@@ -66,45 +79,31 @@ interface TabPanelProps {
 }
 
 type CenterdTabsProps = {
-  handsons: HandsonListItem[];
+  handsons: Handson[];
   value: number;
 };
 
 const HandsonCardTemplete: React.FC<HandsonCardProps> = (props) => {
   const { handson } = props;
-  const start_time: Date = parse(
-    handson.start_at,
-    "yyyy-MM-dd'T'HH:mm",
-    new Date()
-  );
-  const now_minutes: string =
-    start_time.getMinutes().toString() === '0'
-      ? '00'
-      : start_time.getMinutes().toString();
-  const now_time = String(
-    start_time.getMonth().toString() +
-      '/' +
-      start_time.getDate().toString() +
-      ' ' +
-      start_time.getHours().toString() +
-      ':' +
-      now_minutes
-  );
   return (
     <HandsonCard>
-      <CardMedia
-        component="img"
-        alt={handson.title}
-        height="140"
-        image="/static/noimage.jpeg"
-        title={handson.title}
-      />
-      <HandsonContents>
-        <TitleBox component="div" whiteSpace="nowrap">
-          <TitleTypoGraphy variant="h4">{handson.title}</TitleTypoGraphy>
-        </TitleBox>
-        <DateTypoGraphy variant="h6">{now_time}</DateTypoGraphy>
-      </HandsonContents>
+      <CardActionArea component={Link} to={'/handsons/' + handson.id}>
+        <CardMedia
+          component="img"
+          alt={handson.title}
+          height="140"
+          image="/static/noimage.jpeg"
+          title={handson.title}
+        />
+        <HandsonContents>
+          <TitleBox component="div" whiteSpace="nowrap">
+            <TitleTypoGraphy variant="h4">{handson.title}</TitleTypoGraphy>
+          </TitleBox>
+          <DateTypoGraphy variant="subtitle1">
+            {format(new Date(handson.start_at), 'yyyy/MM/dd hh:mm')}
+          </DateTypoGraphy>
+        </HandsonContents>
+      </CardActionArea>
     </HandsonCard>
   );
 };
@@ -145,7 +144,7 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
   };
   return (
     <CenterdTabsBase>
-      <AppBar position="static">
+      {/* <AppBar position="static">
         <HandsonTypeTabs
           value={value}
           onChange={handleChange}
@@ -161,7 +160,7 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
             {...a11yProps('three')}
           />
         </HandsonTypeTabs>
-      </AppBar>
+      </AppBar> */}
       <TabPanel value={value} index="one">
         {handsons.map((handsonItem) => {
           return (
@@ -194,6 +193,8 @@ const CenteredTabs: React.FC<CenterdTabsProps> = (props) => {
 };
 
 export const HandsonListLayout: React.FC<HandsonListLayoutProps> = (props) => {
+  const history = useHistory();
+  const auth = useAuth();
   return (
     <AppBase>
       <CustomAppBar
@@ -208,7 +209,12 @@ export const HandsonListLayout: React.FC<HandsonListLayoutProps> = (props) => {
         }
         right={
           <>
-            <Button color="inherit">マイページ</Button>
+            <IconButton onClick={() => history.push('/handsons/create')}>
+              <HandsonAddIcon></HandsonAddIcon>
+            </IconButton>
+            <IconButton onClick={() => auth.signout(history)}>
+              <LogoutIcon></LogoutIcon>
+            </IconButton>
           </>
         }
       ></CustomAppBar>

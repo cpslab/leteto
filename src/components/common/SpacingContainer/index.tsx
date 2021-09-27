@@ -1,16 +1,21 @@
-import { Grid as MuiGrid } from '@material-ui/core';
+import { Grid, Grid as MuiGrid, GridSpacing } from '@material-ui/core';
 import React, { ComponentProps } from 'react';
 import styled from 'styled-components/macro';
 
 type SpacingContainerProps = ComponentProps<typeof MuiGrid> & {
-  flex?: boolean;
+  spacing: GridSpacing;
   children: React.ReactNode;
 };
 
-const SpacingGrid = styled(MuiGrid)<{ flex?: boolean }>`
-  flex-grow: ${(props) => (props.flex ? 1 : 0)};
+const SpacingParent = styled.div<{ cancelSpacing?: GridSpacing }>`
+  padding: ${(props) =>
+    props.theme.spacing(props.cancelSpacing ? props.cancelSpacing : 0) / 2}px;
 `;
 
 export const SpacingContainer = (props: SpacingContainerProps): JSX.Element => {
-  return <SpacingGrid {...props}>{props.children}</SpacingGrid>;
+  return (
+    <SpacingParent cancelSpacing={props.spacing}>
+      <Grid {...props}>{props.children}</Grid>
+    </SpacingParent>
+  );
 };
