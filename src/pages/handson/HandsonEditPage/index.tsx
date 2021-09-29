@@ -5,13 +5,21 @@ import {
   updateHandson,
   getHandson,
   updateHandsonContent,
+  deleteHandsonContent,
+  createHandsonContent,
 } from '../../../services';
 import { HandsonEditPageParams } from '../../../routes/params-types';
-import { HandsonDetail } from '../../../entity';
+import { HandsonContentWrite, HandsonDetail } from '../../../entity';
 import {
   HandsonFormLayout,
   HandsonFormProps,
 } from '../../../layouts/handson/HandsonFormLayout';
+
+type HandsonContentDiff = {
+  deleteContents: HandsonContentWrite[];
+  updateContents: HandsonContentWrite[];
+  createContents: HandsonContentWrite[];
+};
 
 export const HandsonEditPage = (): JSX.Element => {
   const { id } = useParams<HandsonEditPageParams>();
@@ -38,14 +46,27 @@ export const HandsonEditPage = (): JSX.Element => {
           id: handson.id,
           is_public: true,
         });
-        data.contents.forEach(async (updateContent) => {
-          // handson.contentにもdata.contentsにも存在している時はupdate
-          // handson.contentに存在していてdata.contentsにないものはdelete
-          // handson.contentに存在していなくてdata.contentsにあるものはcreate
+        const contentDiff = getHandsonContentDiff(
+          handson.contents,
+          data.contents
+        );
+        contentDiff.updateContents.forEach(async (updateContent) => {
           await updateHandsonContent({
             id: updateContent.id,
             handson: handson.id,
             content: updateContent.content,
+          });
+        });
+        contentDiff.deleteContents.forEach(async (deleteContent) => {
+          await deleteHandsonContent({
+            id: deleteContent.id,
+            handson: handson.id,
+          });
+        });
+        contentDiff.createContents.forEach(async (createContent) => {
+          await createHandsonContent({
+            handson: handson.id,
+            content: createContent.content,
           });
         });
         history.push('/handsons/' + handson.id);
@@ -53,6 +74,22 @@ export const HandsonEditPage = (): JSX.Element => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const getHandsonContentDiff = (
+    origin: HandsonContentWrite[],
+    update: HandsonContentWrite[]
+  ): HandsonContentDiff => {
+    const same = update.filter((updateItem) =>
+      origin.find((originItem) => updateItem.id === originItem.id)
+    );
+    const sameIds = same.map((sameItem) => sameItem.id);
+
+    return {
+      deleteContents: origin.filter((item) => !sameIds.includes(item.id)),
+      updateContents: same,
+      createContents: update.filter((item) => !sameIds.includes(item.id)),
+    };
   };
 
   return (
