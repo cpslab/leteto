@@ -60,6 +60,10 @@ export const HandsonDetailContent = (
     completeHandsonContentMember,
     revertHandsonContentMember,
   } = props;
+  const [
+    hasBrowsingContentAuthority,
+    setHasBrowsingContentAuthority,
+  ] = React.useState<boolean>(false);
 
   const onCompleteHandsonContentMember = (contentId: number) => {
     completeHandsonContentMember(contentId);
@@ -68,19 +72,26 @@ export const HandsonDetailContent = (
   const onRevertHandsonContentMember = (
     passed_members: PassedContentMember[]
   ) => {
-    const member = passed_members.find((passed_member) => {
-      passed_member.member.id === currentUserId;
-    });
+    const member = passed_members.find(
+      (passed_member) => passed_member.member.id === currentUserId
+    );
     if (member) {
       revertHandsonContentMember(member.id, member.content);
     }
   };
 
   const isCompleted = (passed_members: PassedContentMember[]): boolean => {
-    return passed_members.some((passed_member) => {
-      passed_member.member.id === currentUserId;
-    });
+    return passed_members.some(
+      (passedMember) => passedMember.member.id === currentUserId
+    );
   };
+
+  React.useEffect(() => {
+    const browsingContentAuthority = (): boolean => {
+      return isMember || isOwner;
+    };
+    setHasBrowsingContentAuthority(browsingContentAuthority());
+  }, [contents, isMember, isOwner]);
 
   return (
     <Grid container spacing={3} direction="column">
@@ -90,21 +101,23 @@ export const HandsonDetailContent = (
         </UnderlineTypography>
       </Grid>
       <Grid item>
-        {isMember && (
+        {hasBrowsingContentAuthority ? (
           <Paper>
             {contents.map((content) => {
               return (
-                <>
+                <div key={content.id}>
                   <ContentItemContainer>
                     <Grid container>
                       <GrowContainer item isflex="true">
                         <SpacingContainer spacing={1} container>
                           <Grid item>{content.content}</Grid>
                           <Grid container item>
-                            {content.passed_members.map((passed_member) => {
-                              <SmallAvatar>
-                                {passed_member.member.username}
-                              </SmallAvatar>;
+                            {content.passed_members.map((passedMember) => {
+                              return (
+                                <SmallAvatar key={passedMember.id}>
+                                  {passedMember.member.username[0]}
+                                </SmallAvatar>
+                              );
                             })}
                           </Grid>
                         </SpacingContainer>
@@ -117,7 +130,7 @@ export const HandsonDetailContent = (
                         >
                           {!isOwner && (
                             <>
-                              {!isCompleted(content.passed_members) && (
+                              {!isCompleted(content.passed_members) ? (
                                 <Button
                                   variant="contained"
                                   onClick={() =>
@@ -126,8 +139,7 @@ export const HandsonDetailContent = (
                                 >
                                   完了
                                 </Button>
-                              )}
-                              {isCompleted(content.passed_members) && (
+                              ) : (
                                 <Button
                                   variant="contained"
                                   onClick={() =>
@@ -146,12 +158,11 @@ export const HandsonDetailContent = (
                     </Grid>
                   </ContentItemContainer>
                   <Divider></Divider>
-                </>
+                </div>
               );
             })}
           </Paper>
-        )}
-        {!isMember && (
+        ) : (
           <Paper>
             <ContentItemContainer
               container

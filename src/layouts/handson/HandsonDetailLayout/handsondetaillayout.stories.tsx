@@ -85,4 +85,19 @@ Default.args = {
     ],
   },
   currentUserId: 1,
+  joinHandsonMember: () => {
+    console.log('join handson');
+  },
+  leaveHandsonMember: () => {
+    console.log('leave handson');
+  },
+  completeHandsonContentMember: (data) => {
+    console.log(data);
+  },
+  revertHandsonContentMember: (data) => {
+    console.log(data);
+  },
+  deleteHandson: () => {
+    console.log('delete handson');
+  },
 };

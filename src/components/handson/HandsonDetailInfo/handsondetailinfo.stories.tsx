@@ -22,4 +22,5 @@ Default.args = {
   meeting_url: 'https://meeting.example.com',
   movie_url: 'https://movie.example.com',
   isMember: true,
+  isOwner: false,
 };

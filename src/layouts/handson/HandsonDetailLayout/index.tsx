@@ -48,12 +48,14 @@ export type HandsonDetailLayoutComponentProps = {
 
 const HeroGrid = styled(MuiGrid)`
   height: calc(100vh - 56px);
-  padding: ${(props) => props.theme.spacing(6)}px;
+  padding: ${(props) => props.theme.spacing(6)}px
+    ${(props) => props.theme.spacing(12)}px;
   background-color: ${(props) => props.theme.palette.secondary.main};
 `;
 
 const ContentGrid = styled(MuiGrid)`
-  padding: ${(props) => props.theme.spacing(5)}px;
+  padding: ${(props) => props.theme.spacing(5)}px
+    ${(props) => props.theme.spacing(10)}px;
 `;
 
 export const HandsonDetailLayoutComponent = (
@@ -70,6 +72,10 @@ export const HandsonDetailLayoutComponent = (
   } = props;
   const history = useHistory();
   const [value, setValue] = React.useState(0);
+  const [isMember, setIsMember] = React.useState(false);
+  const [isOwner, setIsOwner] = React.useState(false);
+  const [isHoldHandson, setIsHoldHandson] = React.useState(false);
+  const [canJoinHandson, setCanJoinHandson] = React.useState(false);
   const handleChange = (
     event: React.ChangeEvent<Record<string, unknown>>,
     newValue: number
@@ -108,14 +114,30 @@ export const HandsonDetailLayoutComponent = (
     deleteHandson();
   };
 
-  const isMember = (): boolean => {
-    return handson.members.some(
-      (joinMember) => joinMember.member.id === currentUserId
-    );
-  };
-  const isOwner = (): boolean => {
-    return handson.owner.id === currentUserId;
-  };
+  React.useEffect(() => {
+    const member = (): boolean => {
+      return handson.members.some(
+        (joinMember) => joinMember.member.id === currentUserId
+      );
+    };
+    const owner = (): boolean => {
+      return handson.owner.id === currentUserId;
+    };
+    const holdHandson = (): boolean => {
+      return (
+        isPast(new Date(handson.start_at)) && isFuture(new Date(handson.end_at))
+      );
+    };
+    const joinHandson = (): boolean => {
+      const isFutureOrHold =
+        isFuture(new Date(handson.start_at)) || isHoldHandson;
+      return !owner() && isFutureOrHold;
+    };
+    setIsMember(member());
+    setIsOwner(owner());
+    setIsHoldHandson(holdHandson());
+    setCanJoinHandson(joinHandson());
+  }, [handson, currentUserId]);
 
   React.useEffect(() => {
     history.push('/handsons/' + handson.id + '/description');
@@ -133,7 +155,7 @@ export const HandsonDetailLayoutComponent = (
         }
         right={
           <>
-            {isOwner() && (
+            {isOwner && (
               <>
                 <IconButton
                   onClick={() =>
@@ -164,7 +186,8 @@ export const HandsonDetailLayoutComponent = (
               {handson.owner.username}
             </Typography>
             <Typography variant="caption" display="block">
-              {format(new Date(handson.start_at), 'yyyy/MM/dd')}
+              {format(new Date(handson.start_at), 'yyyy/MM/dd hh:mm')} ~{' '}
+              {format(new Date(handson.end_at), 'yyyy/MM/dd hh:mm')}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -174,17 +197,16 @@ export const HandsonDetailLayoutComponent = (
               alignItems="center"
               direction="column"
             >
-              {isFuture(new Date(handson.start_at)) && !isOwner() && (
+              {canJoinHandson && (
                 <>
-                  {!isMember() && (
+                  {!isMember ? (
                     <Button
                       variant="contained"
                       onClick={() => onJoinHandsonMember()}
                     >
                       参加する
                     </Button>
-                  )}
-                  {isMember() && (
+                  ) : (
                     <Button
                       variant="contained"
                       onClick={() => onLeaveHandsonMember()}
@@ -194,10 +216,7 @@ export const HandsonDetailLayoutComponent = (
                   )}
                 </>
               )}
-              {isPast(new Date(handson.start_at)) &&
-                isFuture(new Date(handson.end_at)) && (
-                  <Typography>開催中</Typography>
-                )}
+              {isHoldHandson && <Typography>開催中</Typography>}
               {isPast(new Date(handson.end_at)) && (
                 <Typography>終了</Typography>
               )}
@@ -229,14 +248,15 @@ export const HandsonDetailLayoutComponent = (
               document_url={handson.document_url}
               meeting_url={handson.meeting_url}
               movie_url={handson.meeting_url}
-              isMember={isMember() || isOwner()}
+              isMember={isMember}
+              isOwner={isOwner}
             ></HandsonDetailInfo>
           </Route>
           <Route exact path="/handsons/:id/content">
             <HandsonDetailContent
               contents={handson.contents}
-              isMember={isMember()}
-              isOwner={isOwner()}
+              isMember={isMember}
+              isOwner={isOwner}
               currentUserId={currentUserId}
               completeHandsonContentMember={(contentId: number) =>
                 completeHandsonContentMember(contentId)
