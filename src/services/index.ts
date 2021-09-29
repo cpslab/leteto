@@ -331,12 +331,13 @@ export const getContentPassMembers = async (
 export const addContentPassMember = async (
   request: serviceTypes.AddContentPassMemberRequest
 ): Promise<entity.PassedContentMemberWrite> => {
-  const result = await http.get<serviceTypes.AddContentPassMemberResponse>(
+  const result = await http.post<serviceTypes.AddContentPassMemberResponse>(
     'api/v1/handsons/' +
       request.handson +
       '/contents/' +
       request.content +
-      '/completion'
+      '/completion',
+    request
   );
   if ('data' in result && result.data) {
     const data = result.data as serviceTypes.AddContentPassMemberResponse;
