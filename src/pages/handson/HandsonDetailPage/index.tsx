@@ -16,23 +16,16 @@ import {
 export const HandsonDetailPage = (): JSX.Element => {
   const { id } = useParams<HandsonDetailPageParams>();
   const [handson, setHandson] = useState<HandsonDetail>();
+  const [loading, setLoading] = useState<number>(0);
   const history = useHistory();
   const auth = useAuth();
-
-  React.useEffect(() => {
-    (async function () {
-      if (auth.currentUser?.username) {
-        const data = await getHandson({ id: Number(id) });
-        setHandson(data);
-      }
-    })();
-  }, []);
 
   const onJoinHandsonMember = async () => {
     if (handson) {
       await addHandsonMember({
         handson: handson?.id,
       });
+      setLoading(loading + 1);
     }
   };
 
@@ -46,6 +39,7 @@ export const HandsonDetailPage = (): JSX.Element => {
           id: handsonMemberId,
           handson: handson.id,
         });
+        setLoading(loading + 1);
       }
     }
   };
@@ -53,12 +47,14 @@ export const HandsonDetailPage = (): JSX.Element => {
   const onCompleteHandsonContentMember = async (content: number) => {
     if (handson) {
       await addContentPassMember({ content, handson: handson.id });
+      setLoading(loading + 1);
     }
   };
 
   const onRevertHandsonContentMember = async (id: number, content: number) => {
     if (handson) {
       await deleteContentPassMember({ id, content, handson: handson.id });
+      setLoading(loading + 1);
     }
   };
 
@@ -66,8 +62,18 @@ export const HandsonDetailPage = (): JSX.Element => {
     if (handson) {
       await deleteHandson({ id: handson.id });
       history.push('/handsons/');
+      setLoading(loading + 1);
     }
   };
+
+  React.useEffect(() => {
+    (async function () {
+      if (auth.currentUser?.username) {
+        const data = await getHandson({ id: Number(id) });
+        setHandson(data);
+      }
+    })();
+  }, [loading]);
 
   return (
     <>
