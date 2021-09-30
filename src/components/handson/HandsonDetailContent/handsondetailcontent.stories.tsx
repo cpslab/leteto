@@ -42,5 +42,6 @@ Default.args = {
     },
   ],
   isMember: true,
+  isOwner: false,
   currentUserId: 1,
 };

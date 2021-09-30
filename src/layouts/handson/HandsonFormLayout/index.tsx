@@ -121,16 +121,16 @@ export const HandsonFormLayout = (
             <Grid container item>
               <Typography variant="h5">{props.pageTitleText}</Typography>
             </Grid>
-            <GrowContainer item flex={true}>
+            <GrowContainer item isflex="true">
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <Grid container spacing={2}>
-                  <GrowContainer container item flex={true}>
+                  <GrowContainer container item isflex="true">
                     <FormPaper>
                       <GrowContainer
                         container
                         direction="column"
                         spacing={3}
-                        flex={true}
+                        isflex="true"
                       >
                         <Grid item>
                           <Typography variant="h6">タイトル</Typography>

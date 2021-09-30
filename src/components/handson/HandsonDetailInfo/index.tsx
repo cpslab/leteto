@@ -15,6 +15,7 @@ export type HandsonDetailInfoProps = {
   meeting_url: string;
   movie_url?: string;
   isMember: boolean;
+  isOwner: boolean;
 };
 
 const UnderlineTypography = styled(MuiTypography)`
@@ -38,7 +39,19 @@ const InfoContainer = styled(MuiGrid)`
 export const HandsonDetailInfo = (
   props: HandsonDetailInfoProps
 ): JSX.Element => {
-  const { document_url, meeting_url, movie_url, isMember } = props;
+  const { document_url, meeting_url, movie_url, isMember, isOwner } = props;
+  const [
+    hasBrowsingDetailAuthority,
+    setHasBrowsingDetailAuthority,
+  ] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const browsingDetailAuthority = (): boolean => {
+      return isMember || isOwner;
+    };
+    setHasBrowsingDetailAuthority(browsingDetailAuthority());
+  }, [isMember, isOwner]);
+
   return (
     <Grid container spacing={3} direction="column">
       <Grid item>
@@ -47,7 +60,7 @@ export const HandsonDetailInfo = (
         </UnderlineTypography>
       </Grid>
       <Grid item>
-        {isMember && (
+        {hasBrowsingDetailAuthority ? (
           <Paper>
             <InfoContainer>
               <Typography variant="subtitle1">講義資料配布先</Typography>
@@ -110,8 +123,7 @@ export const HandsonDetailInfo = (
               </>
             )}
           </Paper>
-        )}
-        {!isMember && (
+        ) : (
           <Paper>
             <InfoContainer container justify="center" alignItems="center">
               講義情報を閲覧するには本イベントへの参加をお願いします。

@@ -3,12 +3,12 @@ import React, { ComponentProps } from 'react';
 import styled from 'styled-components/macro';
 
 type GrowContainerProps = ComponentProps<typeof MuiGrid> & {
-  flex: boolean;
+  isflex: 'true' | 'false';
   children: React.ReactNode;
 };
 
-const GrowGrid = styled(MuiGrid)<{ flex?: boolean }>`
-  flex-grow: ${(props) => (props.flex ? 1 : 0)};
+const GrowGrid = styled(MuiGrid)<{ isflex?: 'true' | 'false' }>`
+  flex-grow: ${(props) => (props.isflex === 'true' ? 1 : 0)};
 `;
 
 export const GrowContainer = (props: GrowContainerProps): JSX.Element => {
