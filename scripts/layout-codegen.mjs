@@ -52,6 +52,7 @@ const main = async () => {
       from_dir + 'layouttemplate.stories.tsx',
       'utf-8'
     );
+    readstory = readstory.replace(/LAYOUTFILEPATH/g, answers['filepath']);
     readstory = readstory.replace(/LAYOUTTEMPLATE/g, answers['classname']);
     fs.writeFileSync(
       to_dir + answers['classname'].toLowerCase() + '.stories.tsx',

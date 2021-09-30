@@ -1,10 +1,17 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import * as API from '../services';
-import { User } from '../services/service-types';
 import * as H from 'history';
 
+export type AuthenticatedUser = {
+  pk: number;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+};
+
 type authContextType = {
-  currentUser: User | null | undefined;
+  currentUser: AuthenticatedUser | null | undefined;
   signin: (
     username: string,
     email: string,
@@ -21,6 +28,10 @@ type authContextType = {
   signout: (history: H.History) => Promise<void>;
 };
 
+type authProviderType = {
+  children: React.ReactNode;
+};
+
 function createCtx<ContextType>() {
   const ctx = createContext<ContextType | undefined>(undefined);
   function useCtx() {
@@ -32,9 +43,9 @@ function createCtx<ContextType>() {
 }
 
 const useAuthContext = (): authContextType => {
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(
-    undefined
-  );
+  const [currentUser, setCurrentUser] = useState<
+    AuthenticatedUser | null | undefined
+  >(undefined);
 
   const signin = async (
     username: string,
@@ -42,9 +53,13 @@ const useAuthContext = (): authContextType => {
     password: string,
     history: H.History
   ) => {
-    const user = await API.signin({ username, email, password });
-    setCurrentUser(user);
-    history.push('/handsons');
+    try {
+      const user = await API.signin({ username, email, password });
+      setCurrentUser(user);
+      history.push('/handsons');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signup = async (
@@ -54,9 +69,13 @@ const useAuthContext = (): authContextType => {
     repassword: string,
     history: H.History
   ) => {
-    const user = await API.signup({ username, email, password, repassword });
-    setCurrentUser(user);
-    history.push('/handsons');
+    try {
+      const user = await API.signup({ username, email, password, repassword });
+      setCurrentUser(user);
+      history.push('/handsons');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signout = async (history: H.History) => {
@@ -68,8 +87,12 @@ const useAuthContext = (): authContextType => {
 
   useEffect(() => {
     (async function () {
-      const user = await API.getCurrentUser();
-      setCurrentUser(user);
+      try {
+        const user = await API.getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
 
@@ -78,7 +101,7 @@ const useAuthContext = (): authContextType => {
 
 export const [useAuth, SetAuthProvider] = createCtx<authContextType>();
 
-export const AuthProvider: React.FC = (props) => {
+export const AuthProvider = (props: authProviderType): JSX.Element => {
   const auth = useAuthContext();
   return <SetAuthProvider value={auth}>{props.children}</SetAuthProvider>;
 };

@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const LAYOUTTEMPLATE: React.FC = () => {
+export const LAYOUTTEMPLATE = (): JSX.Element => {
   return <div></div>;
 };
