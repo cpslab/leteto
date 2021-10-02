@@ -32,8 +32,6 @@ class Handson(models.Model):
 
     is_public = models.BooleanField(default=True)
 
-    status = models.CharField(max_length=50, choices=[("f", "future"), ("o", "open"), ("c", "closed"), ("p", "past")])
-
     def __str__(self):
         return 'owner: ' + self.owner.username + ', title: ' + self.title
 
@@ -68,10 +66,10 @@ class ContentPassMember(models.Model):
 
     content = models.ForeignKey(HandsonContent, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'title: ' + self.content.handson.title + ', content: ' + self.content.content + ', user: ' + self.user.username
+        return 'title: ' + self.content.handson.title + ', content: ' + self.content.content + ', member: ' + self.member.username
 
     class Meta:
         db_table = ''
@@ -84,10 +82,10 @@ class HandsonMember(models.Model):
 
     handson = models.ForeignKey(Handson, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'title: ' + self.handson.title + ', user: ' + self.user.username
+        return 'title: ' + self.handson.title + ', member: ' + self.member.username
 
     class Meta:
         db_table = ''

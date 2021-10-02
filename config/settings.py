@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     
     'rest_framework',
+    'django_filters',
 
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -57,13 +59,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -136,19 +137,57 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
-
+# Custom Auth User Model
 AUTH_USER_MODEL = 'users.CustomUser'
 SITE_ID = 1
 
+# drf
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),  
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
+# cors
+CORS_ALLOWED_ORIGINS = (
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+)
+
+CSRF_TRUSTED_ORIGINS  =  [ 
+    'localhost:3000',
+    '127.0.0.1:3000',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+
+# jwt
 REST_USE_JWT = True
+
+JWT_AUTH_COOKIE = 'leteto-auth'
+JWT_AUTH_REFRESH_COOKIE = 'leteto-refresh-token'
+
+JWT_AUTH_SAMESITE = 'None'
+JWT_AUTH_SECURE = True
+
+# 登録時のメールをコンソールに出力する
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# 東京のタイムゾーンに設定
+TIME_ZONE = 'Asia/Tokyo'
+
+# タイムゾーンを使用するかどうか
+USE_TZ = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
+}
