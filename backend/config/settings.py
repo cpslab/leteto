@@ -153,6 +153,13 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
+# rest-auth
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.UserRegisterSerializer'
+}
+
 # cors
 CORS_ALLOWED_ORIGINS = (
     'http://localhost:3000',

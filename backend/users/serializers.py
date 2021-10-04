@@ -1,37 +1,20 @@
+import re
 from rest_framework import serializers
-from handsons.models import Handson
-from handsons.serializers import UserSerializer
+from dj_rest_auth.registration.serializers import RegisterSerializer
 
-class HandsonListSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
+class UserRegisterSerializer(RegisterSerializer):
 
-    class Meta:
-        model = Handson
-        fields = ('id', 'owner', 'title', 'headline', 'detail', 'require', 'document_url',
-                  'meeting_url', 'movie_url', 'start_at', 'end_at', 'is_public', 'status')
-        extra_kwargs = {
-            'headline': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'detail': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'require': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'document_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'meeting_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-            'movie_url': {
-                'write_only': True,
-                'allow_blank': True,
-            },
-        }
+    def validate(self, data):
+        """
+        Check that email format.
+        """
+        if not re.compile("[\w]+@ms\.dendai\.ac\.jp|[\w]+@cps\.im\.dendai\.ac\.jp").match(data["email"]):
+            raise serializers.ValidationError("email format is not valid")
+        
+        """
+        Check that password.
+        """
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError("The two password fields didn't match.")
+
+        return data
