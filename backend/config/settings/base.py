@@ -14,20 +14,11 @@ from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u4wg69w%j7!v+0!bi7n5o@dm@387zp)&hw%w)wruk)hbxgttqs'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -131,12 +122,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_URL = '/static/'
-
 # Custom Auth User Model
 AUTH_USER_MODEL = 'users.CustomUser'
 SITE_ID = 1
@@ -164,11 +149,13 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 CORS_ALLOWED_ORIGINS = (
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'https://leteto.herokuapp.com',
 )
 
 CSRF_TRUSTED_ORIGINS  =  [ 
-    'localhost:3000',
-    '127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://leteto.herokuapp.com',
 ]
 
 CORS_ALLOW_CREDENTIALS = True

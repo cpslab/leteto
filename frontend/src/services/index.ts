@@ -7,7 +7,7 @@ import * as serviceTypes from './service-types';
 // create http instance
 const service_url =
   process.env.NODE_ENV === 'production'
-    ? 'https://leteto'
+    ? 'https://leteto.herokuapp.com/'
     : 'http://127.0.0.1:8000/';
 const csrfToken = Cookies.get('csrftoken');
 const http = axios.create({

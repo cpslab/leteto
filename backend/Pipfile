@@ -13,6 +13,10 @@ django-cors-headers = "*"
 djangorestframework-simplejwt = "*"
 django-allauth = "*"
 django-filter = "*"
+whitenoise = "*"
+dj-database-url = "*"
+python-dotenv = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.9"
