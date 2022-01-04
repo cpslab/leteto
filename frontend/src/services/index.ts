@@ -155,7 +155,7 @@ export const getHandson = async (
 export const updateHandson = async (
   request: serviceTypes.UpdateHandsonRequest
 ): Promise<Omit<entity.HandsonDetailWrite, 'owner'>> => {
-  const result = await http.post<serviceTypes.UpdateHandsonResponse>(
+  const result = await http.put<serviceTypes.UpdateHandsonResponse>(
     'api/v1/handsons/' + request.id,
     request
   );
@@ -275,7 +275,7 @@ export const createHandsonContent = async (
 export const updateHandsonContent = async (
   request: serviceTypes.UpdateHandsonContentRequest
 ): Promise<entity.HandsonContentWrite> => {
-  const result = await http.post<serviceTypes.UpdateHandsonContentResponse>(
+  const result = await http.put<serviceTypes.UpdateHandsonContentResponse>(
     'api/v1/handsons/' + request.handson + '/contents/' + request.id,
     request
   );
